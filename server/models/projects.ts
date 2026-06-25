@@ -1,10 +1,21 @@
-export interface Project {
-  id: number
-  name: string
-  description: string
-  github_url: string
-  owner_name: string
-  created_at: Date
+export interface ProjectData {
+  fullName: string
+  description: string | null
+  htmlUrl: string
+  homepage: string | null
+  primaryLanguage: string | null
+  topics: string[] | null
+  stars: number
+  openIssuesCount: number
+  isOpenSource: boolean
+  license: string | null
+  readme: string | null
+  aiSummary: string | null
+  aiSummary_at: Date | null
+  lastSyncedAt: Date | null
 }
 
-export type NewProject = Omit<Project, 'id' | 'created_at'>
+export interface Project extends ProjectData {
+  id: number
+  createdAt: Date
+}
