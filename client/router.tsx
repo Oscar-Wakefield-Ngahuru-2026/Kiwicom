@@ -9,7 +9,7 @@ import Home from './components/Home'
 import ProjectPage from './components/ProjectPage'
 import CreateProject from './components/CreateProject'
 
-const routes = createRoutesFromElements(
+export const routes = createRoutesFromElements(
   <Route path="/" element={<Layout />}>
     <Route index element={<Home />} />
     <Route path="projects/:id" element={<ProjectPage />} />
