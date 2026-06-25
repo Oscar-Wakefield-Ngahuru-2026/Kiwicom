@@ -5,7 +5,6 @@ export interface Projects {
   github_url: string
   owner_name: string
   created_at: Date
-
 }
 
 export type NewProject = Omit<Projects, 'id' | 'create_at'>
