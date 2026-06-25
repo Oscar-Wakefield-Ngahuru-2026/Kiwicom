@@ -1,15 +1,15 @@
-import {
-  createBrowserRouter,
-  createRoutesFromElements,
-  Route,
-} from 'react-router'
+import { createBrowserRouter, createRoutesFromElements, Route } from 'react-router'
 
-import App from './components/App'
+import Layout from './components/Layout'
 import Home from './components/Home'
+import ProjectPage from './components/ProjectPage'
+import CreateProject from './components/CreateProject'
 
 const routes = createRoutesFromElements(
-  <Route path="/" element={<App />}>
+  <Route path="/" element={<Layout />}>
     <Route index element={<Home />} />
+    <Route path="projects/:id" element={<ProjectPage />} />
+    <Route path="projects/new" element={<CreateProject />} />
   </Route>
 )
 
