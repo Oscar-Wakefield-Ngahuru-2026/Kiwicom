@@ -5,7 +5,7 @@ exports.seed = async function (knex) {
 
   await knex('projects').del()
 
-  await knex('projects').insert({
+  await knex('projects').insert([{
     name: 'Test Project One',
     description: 'A placeholder project for veryifying the seed runs.',
     github_url:'https://github.com/example/test-project-one',
@@ -16,7 +16,8 @@ exports.seed = async function (knex) {
     description: 'Another placeholder while we wait on real data.',
     github_url: 'https://github.com/example/test-project-two',
     owner_name: 'example',
-  },
+  }
+ ]
 
 )
 }
