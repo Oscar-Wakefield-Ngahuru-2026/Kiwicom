@@ -2,7 +2,6 @@ import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest'
 import db from '../../connection'
 import { getProjects } from '../projects'
 
-
 describe('getProjects', () => {
   beforeAll(async () => {
     await db.migrate.latest()
