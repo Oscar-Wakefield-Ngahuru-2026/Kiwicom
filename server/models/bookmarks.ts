@@ -1,8 +1,8 @@
 export interface BookmarkData {
-  user_id: string
-  project_id: number
+  userId: string
+  projectId: number
 }
 
 export interface Bookmark extends BookmarkData {
-  created_at: Date
+  createdAt: Date
 }
