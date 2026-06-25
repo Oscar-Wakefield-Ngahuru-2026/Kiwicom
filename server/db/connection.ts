@@ -7,9 +7,9 @@ const config = require('./knexfile.cjs')
 const env = process.env.NODE_ENV ?? 'development'
 const envConfig = config[env]
 
-if(!envConfig) {
+if (!envConfig) {
   throw new Error(
-     `No Knex config for NODE_ENV="${env}". Expected one of: ${Object.keys(config).join(', ')}`,
+    `No Knex config for NODE_ENV="${env}". Expected one of: ${Object.keys(config).join(', ')}`,
   )
 }
 
@@ -21,5 +21,4 @@ if (env !== 'test' && !process.env.DATABASE_URL) {
 
 const db = knex(envConfig)
 
-export default db 
-
+export default db

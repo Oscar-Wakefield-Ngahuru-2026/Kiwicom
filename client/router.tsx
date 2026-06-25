@@ -1,4 +1,8 @@
-import { createBrowserRouter, createRoutesFromElements, Route } from 'react-router'
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+} from 'react-router'
 
 import Layout from './components/Layout'
 import Home from './components/Home'
@@ -10,7 +14,7 @@ const routes = createRoutesFromElements(
     <Route index element={<Home />} />
     <Route path="projects/:id" element={<ProjectPage />} />
     <Route path="projects/new" element={<CreateProject />} />
-  </Route>
+  </Route>,
 )
 
 const router = createBrowserRouter(routes)
