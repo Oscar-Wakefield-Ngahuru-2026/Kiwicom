@@ -7,8 +7,8 @@ const sharedPaths = {
 }
 
 const pgConnection = {
-  conncetionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorised: false},
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false},
 }
 
 module.exports = {
@@ -24,7 +24,7 @@ module.exports = {
   },
   test: {
     client: 'sqlite3',
-    connection: { filename: 'memeory'},
+    connection: { filename: 'memory'},
     useNullAsDefault: true,
     ...sharedPaths,
   },
