@@ -50,7 +50,8 @@ export async function getProjectById(id: number): Promise<Project | null> {
  *     not here. DB functions trust their inputs.
  */
 export async function addProject(data: NewProject): Promise<Project> {
-  throw new Error('Not implemented — see Feature 9 user story.')
+  const [project] = await db('projects').insert(data).returning('*')
+  return project
 }
 
 /**

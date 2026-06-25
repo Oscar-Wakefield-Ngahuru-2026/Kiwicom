@@ -1,4 +1,4 @@
-export interface Projects {
+export interface Project {
   id: number
   name: string
   description: string
@@ -7,4 +7,4 @@ export interface Projects {
   created_at: Date
 }
 
-export type NewProject = Omit<Projects, 'id' | 'create_at'>
+export type NewProject = Omit<Project, 'id' | 'created_at'>
