@@ -78,3 +78,11 @@ Claude CoWork
 
 # .DS_Store
 .DS_Store
+
+# Claude Code local state
+.claude/
+
+# Stray SQLite files from accidental connection.filename typos
+memeory
+*.sqlite
+*.sqlite3
