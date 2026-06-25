@@ -72,3 +72,11 @@ tags
 
 # Promptkit repository
 promptkit
+
+# Claude Code local state
+.claude/
+
+# Stray SQLite files from accidental connection.filename typos
+memeory
+*.sqlite
+*.sqlite3
