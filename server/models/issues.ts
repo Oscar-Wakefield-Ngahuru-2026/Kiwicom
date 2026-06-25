@@ -1,12 +1,12 @@
 export interface IssueData {
-  project_id: number
+  projectId: number
   title: string
-  html_url: string
+  htmlUrl: string
   labels: string[] | null
   state: string
 }
 
 export interface IssueRecord extends IssueData {
   id: number
-  created_at: Date
+  createdAt: Date
 }
