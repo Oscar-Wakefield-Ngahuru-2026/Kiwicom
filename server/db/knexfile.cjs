@@ -7,8 +7,8 @@ const sharedPaths = {
 }
 
 const pgConnection = {
-  conncetionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorised: false},
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false},
 }
 
 module.exports = {
