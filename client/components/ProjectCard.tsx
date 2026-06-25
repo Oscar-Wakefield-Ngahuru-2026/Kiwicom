@@ -1,26 +1,24 @@
 interface Props {
-  ownerName: string
+  name: string
+  description: string
   imgUrl?: string
-  projectName: string
-  briefDescription: string
-  tags: string[]
+  tags?: string[]
 }
 
 export default function ProjectCard({
-  projectName,
-  ownerName,
-  briefDescription,ß
+  name,
+  description,
   imgUrl,
   tags,
 }: Props) {
   return (
     <div>
-      {imgUrl && <img src={imgUrl} alt={projectName} />}
+      {imgUrl && <img src={imgUrl} alt={name} />}
 
-      <h3>{projectName}</h3>
-      <p>{briefDescription}</p>
+      <h3>{name}</h3>
+      <p>{description}</p>
       <>
-        {tags.map((tag) => (
+        {tags?.map((tag) => (
           <span key={tag}>{tag}</span>
         ))}
       </>
