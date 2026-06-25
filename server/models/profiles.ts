@@ -1,10 +1,10 @@
 export interface ProfileData {
-  github_username: string
-  avatar_url: string | null
+  githubUsername: string
+  avatarUrl: string | null
   bio: string | null
 }
 
 export interface ProfileRecord extends ProfileData {
   id: string
-  created_at: Date
+  createdAt: Date
 }
