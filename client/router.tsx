@@ -9,7 +9,7 @@ const routes = createRoutesFromElements(
   <Route path="/" element={<Layout />}>
     <Route index element={<Home />} />
     <Route path="projects/:id" element={<ProjectPage />} />
-    <Route path="projects/new" element={<CreateProject />} />
+    <Route path="project" element={<CreateProject />} />
   </Route>
 )
 
