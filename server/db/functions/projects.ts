@@ -70,7 +70,11 @@ export async function getProjectById(id: number): Promise<Project | null> {
  */
 export async function addProject(data: Partial<ProjectData>): Promise<Project> {
   const [project] = await db('projects')
-    .insert({ full_name: data.fullName, html_url: data.htmlUrl })
+    .insert({
+      full_name: data.fullName,
+      description: data.description,
+      html_url: data.htmlUrl,
+    })
     .returning(projectColumns)
   return project
 }

@@ -16,12 +16,12 @@ router.get('/', async (req, res) => {
 // POST
 router.post('/', async (req, res) => {
   try {
-    const { fullName, htmlUrl } = req.body
+    const { fullName, description, htmlUrl } = req.body
     if (!fullName || !htmlUrl) {
       res.status(400).json({ error: 'fullName and htmlUrl are required' })
       return
     }
-    const newProject = await db.addProject({ fullName, htmlUrl })
+    const newProject = await db.addProject({ fullName, description, htmlUrl })
     res.status(201).json(newProject)
   } catch (error) {
     if (error instanceof Error) {
