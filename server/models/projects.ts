@@ -11,7 +11,7 @@ export interface ProjectData {
   license: string | null
   readme: string | null
   aiSummary: string | null
-  aiSummary_at: Date | null
+  aiSummaryAt: Date | null
   lastSyncedAt: Date | null
 }
 

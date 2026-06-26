@@ -1,21 +1,21 @@
 interface Props {
-  name: string
+  fullName: string
   description: string
   imgUrl?: string
   tags?: string[]
 }
 
 export default function ProjectCard({
-  name,
+  fullName,
   description,
   imgUrl,
   tags,
 }: Props) {
   return (
     <div>
-      {imgUrl && <img src={imgUrl} alt={name} />}
+      {imgUrl && <img src={imgUrl} alt={fullName} />}
 
-      <h3>{name}</h3>
+      <h3>{fullName}</h3>
       <p>{description}</p>
       <>
         {tags?.map((tag) => (
