@@ -1,11 +1,9 @@
 import knex from 'knex'
-import { createRequire } from 'node:module'
 
-const require = createRequire(import.meta.url)
-const config = require('./knexfile.cjs')
+import config from './knexfile.js'
 
 const env = process.env.NODE_ENV ?? 'development'
-const envConfig = config[env]
+const envConfig = (config as Record<string, object>)[env]
 
 if (!envConfig) {
   throw new Error(

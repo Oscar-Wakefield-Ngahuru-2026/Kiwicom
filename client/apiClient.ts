@@ -1,5 +1,5 @@
 import request from 'superagent'
-import type { Project } from '../models/projects'
+import type { Project, ProjectData } from '../models/projects'
 
 const rootURL = new URL(`/api/v1`, document.baseURI)
 
@@ -11,10 +11,10 @@ export async function getGreeting() {
 // Mirrors server JSON (snake_case until knexfile.wrapIdentifier wires camelCase translation).
 interface ProjectRow {
   id: number
-  full_name: string
+  fullName: string
   description: string | null
-  html_url: string
-  created_at: string
+  htmlUrl: string
+  createdAt: string
 }
 
 // View model for the card grid — derived from Project, with fullName pre-split
@@ -32,16 +32,19 @@ export interface ProjectSummary {
 export async function getProjects(): Promise<ProjectSummary[]> {
   const res = await request.get(`${rootURL}/projects`)
   return (res.body as ProjectRow[]).map((row) => {
-    const [ownerName, name] = row.full_name.split('/')
+    const [ownerName, name] = row.fullName.split('/')
     return {
       id: row.id,
       name,
       description: row.description ?? '',
-      githubUrl: row.html_url,
+      githubUrl: row.htmlUrl,
       ownerName,
-      createdAt: row.created_at,
+      createdAt: row.createdAt,
     }
   })
 }
-
+export async function addProject(data: ProjectData): Promise<Project> {
+  const res = await request.post(`${rootURL}/projects`).send(data)
+  return res.body
+}
 export type { Project }

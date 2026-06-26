@@ -1,4 +1,4 @@
-exports.up = async function(knex) {
+export async function up(knex) {
   await knex.schema.createTable('profiles', (table) => {
     table.string('id').primary()
     table.string('github_username').notNullable()
@@ -28,7 +28,12 @@ exports.up = async function(knex) {
 
   await knex.schema.createTable('issues', (table) => {
     table.integer('id').primary()
-    table.integer('project_id').notNullable().references('id').inTable('projects').onDelete('CASCADE')
+    table
+      .integer('project_id')
+      .notNullable()
+      .references('id')
+      .inTable('projects')
+      .onDelete('CASCADE')
     table.string('title').notNullable()
     table.text('html_url').notNullable()
     table.specificType('labels', 'text[]')
@@ -37,14 +42,24 @@ exports.up = async function(knex) {
   })
 
   await knex.schema.createTable('bookmarks', (table) => {
-    table.string('user_id').notNullable().references('id').inTable('profiles').onDelete('CASCADE')
-    table.integer('project_id').notNullable().references('id').inTable('projects').onDelete('CASCADE')
+    table
+      .string('user_id')
+      .notNullable()
+      .references('id')
+      .inTable('profiles')
+      .onDelete('CASCADE')
+    table
+      .integer('project_id')
+      .notNullable()
+      .references('id')
+      .inTable('projects')
+      .onDelete('CASCADE')
     table.timestamp('created_at').notNullable().defaultTo(knex.fn.now())
     table.primary(['user_id', 'project_id'])
   })
 }
 
-exports.down = async function(knex) {
+export async function down(knex) {
   await knex.schema.dropTableIfExists('bookmarks')
   await knex.schema.dropTableIfExists('issues')
   await knex.schema.dropTableIfExists('projects')
