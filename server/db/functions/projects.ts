@@ -1,4 +1,5 @@
-import { Project, ProjectData } from '../../models/projects'
+import { ProjectData, Project } from '../../../models/projects'
+
 import db from '../connection'
 
 const projectColumns = [

@@ -19,3 +19,5 @@ export interface Project extends ProjectData {
   id: number
   createdAt: Date
 }
+
+export type NewProject = Omit<Project, 'id' | 'createdAt'>
