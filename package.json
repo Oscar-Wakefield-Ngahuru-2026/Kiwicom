@@ -22,7 +22,8 @@
     "db:rollback": "npm run knex -- migrate:rollback",
     "db:make-migration": "npm run knex -- migrate:make",
     "db:seed": "npm run knex -- seed:run",
-    "db:make-seed": "npm run knex -- seed:make"
+    "db:make-seed": "npm run knex -- seed:make",
+    "db:seed-github": "tsx server/scripts/seedFromGithub.ts"
   },
   "keywords": [
     "frontend"
