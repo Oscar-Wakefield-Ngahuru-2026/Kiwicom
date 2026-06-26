@@ -1,4 +1,4 @@
-import { Project, NewProject } from '../../models/projects'
+import { Project, NewProject } from '../../../models/projects'
 import db from '../connection'
 
 /**

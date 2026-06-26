@@ -21,21 +21,22 @@ describe('GET /api/v1/projects', () => {
     expect(res.status).toBe(200)
     expect(res.body).toEqual([])
   })
-
-  it('returns 200 and the project rows when projects exist', async () => {
+    it('returns 200 and the project rows when projects exist', async () => {
     await db('projects').insert({
-      name: 'Kiwicom',
+      id: 12345,
+      full_name: 'Oscar-Wakefield-Ngahuru-2026/Kiwicom',
+      html_url: 'https://github.com/Oscar-Wakefield-Ngahuru-2026/Kiwicom',
       description: 'A discovery catalogue for GitHub projects',
-      github_url: 'https://github.com/Oscar-Wakefield-Ngahuru-2026/Kiwicom',
-      owner_name: 'Oscar-Wakefield-Ngahuru-2026',
     })
 
     const res = await request(server).get('/api/v1/projects')
     expect(res.status).toBe(200)
     expect(res.body).toHaveLength(1)
     expect(res.body[0]).toMatchObject({
-      name: 'Kiwicom',
-      owner_name: 'Oscar-Wakefield-Ngahuru-2026',
+      full_name: 'Oscar-Wakefield-Ngahuru-2026/Kiwicom',
+      html_url: 'https://github.com/Oscar-Wakefield-Ngahuru-2026/Kiwicom',
     })
   })
+
+  
 })
