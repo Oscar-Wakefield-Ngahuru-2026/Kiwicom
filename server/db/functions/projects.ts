@@ -32,7 +32,8 @@ export async function getProjects(): Promise<Project[]> {
  *     not this function. DB functions stay HTTP-agnostic.
  */
 export async function getProjectById(id: number): Promise<Project | null> {
-  throw new Error('Not implemented — see Feature 5 user story.')
+  const row = await db('projects').where({ id }).first()
+  return row ?? null
 }
 
 /**
@@ -70,7 +71,11 @@ export async function updateProject(
   id: number,
   data: Partial<NewProject>,
 ): Promise<Project | null> {
-  throw new Error('Not implemented — deferred to post-MVP edit feature.')
+  const [updated] = await db('projects')
+    .where({ id })
+    .update(data)
+    .returning('*')
+  return updated ?? null
 }
 
 /**
