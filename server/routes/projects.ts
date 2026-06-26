@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
     const projects = await db.getProjects()
     res.json(projects)
   } catch (err) {
-    console.error('GET/api/v1/pprojects failed', err)
+    console.error(err)
     res.status(500).json({ error: 'Failed to fetch projects' })
   }
 })
