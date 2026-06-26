@@ -2,6 +2,7 @@
 import { renderApp } from '../../test-setup'
 import { describe, it, expect } from 'vitest'
 
+
 describe('Navbar.tsx', () => {
   it('renders the KIWICOM.COM logo linking to /', () => {
     // ARRANGE
