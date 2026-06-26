@@ -1,6 +1,29 @@
 import { Project, NewProject } from '../../../models/projects'
 import db from '../connection'
 
+// Converts one snake_case DB row to a camelCase Project.
+// Temporary read-boundary — removed when Henry's projectColumns work auto-translates column names.
+function rowToProject(row: Record<string, unknown>): Project {
+  return {
+    id: row.id as number,
+    fullName: row.full_name as string,
+    description: row.description as string | null,
+    htmlUrl: row.html_url as string,
+    homepage: row.homepage as string | null,
+    primaryLanguage: row.primary_language as string | null,
+    topics: row.topics as string[] | null,
+    stars: row.stars as number,
+    openIssuesCount: row.open_issues_count as number,
+    isOpenSource: Boolean(row.is_open_source),
+    license: row.license as string | null,
+    readme: row.readme as string | null,
+    aiSummary: row.ai_summary as string | null,
+    aiSummaryAt: row.ai_summary_at as Date | null,
+    lastSyncedAt: row.last_synced_at as Date | null,
+    createdAt: row.created_at as Date,
+  }
+}
+
 /**
  * Return all projects in the database, newest first.
  *
@@ -15,7 +38,8 @@ import db from '../connection'
  *   - Search by name (WHERE name ILIKE ?)
  */
 export async function getProjects(): Promise<Project[]> {
-  return db('projects').select('*').orderBy('created_at', 'desc')
+  const rows = await db('projects').select('*').orderBy('created_at', 'desc')
+  return rows.map(rowToProject)
 }
 
 /**
@@ -33,7 +57,7 @@ export async function getProjects(): Promise<Project[]> {
  */
 export async function getProjectById(id: number): Promise<Project | null> {
   const row = await db('projects').where({ id }).first()
-  return row ?? null
+  return row ? rowToProject(row) : null
 }
 
 /**
@@ -50,6 +74,7 @@ export async function getProjectById(id: number): Promise<Project | null> {
  *   - Validate the github_url is a real GitHub URL in the route layer,
  *     not here. DB functions trust their inputs.
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function addProject(data: NewProject): Promise<Project> {
   throw new Error('Not implemented — see Feature 9 user story.')
 }
@@ -75,7 +100,7 @@ export async function updateProject(
     .where({ id })
     .update(data)
     .returning('*')
-  return updated ?? null
+  return updated ? rowToProject(updated) : null
 }
 
 /**
@@ -91,6 +116,7 @@ export async function updateProject(
  *     cascade behavior in those migrations (ON DELETE CASCADE vs RESTRICT).
  *   - For now this is a soft skeleton — the FK constraints don't exist yet.
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function deleteProject(id: number): Promise<number> {
   throw new Error('Not implemented — deferred to post-MVP delete feature.')
 }

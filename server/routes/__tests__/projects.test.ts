@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   describe,
   it,
@@ -49,8 +50,8 @@ describe('GET /api/v1/projects', () => {
     expect(res.status).toBe(200)
     expect(res.body).toHaveLength(1)
     expect(res.body[0]).toMatchObject({
-      full_name: 'Oscar-Wakefield-Ngahuru-2026/Kiwicom',
-      html_url: 'https://github.com/Oscar-Wakefield-Ngahuru-2026/Kiwicom',
+      fullName: 'Oscar-Wakefield-Ngahuru-2026/Kiwicom',
+      htmlUrl: 'https://github.com/Oscar-Wakefield-Ngahuru-2026/Kiwicom',
     })
   })
 })

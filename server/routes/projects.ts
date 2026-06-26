@@ -5,6 +5,7 @@ import {
   updateProject,
 } from '../db/functions/projects'
 import { fetchAndNormalize } from '../lib/github/fetcher'
+import type { NewProject } from '../../models/projects'
 
 const router = Router()
 
@@ -29,12 +30,14 @@ router.post('/:id/refresh', async (req, res) => {
     return res.status(404).json({ error: 'Project not found' })
   }
 
-  const fullName = (project as any).full_name as string
-  const [owner, repo] = fullName.split('/')
+  const [owner, repo] = project.fullName.split('/')
 
   try {
     const normalized = await fetchAndNormalize(owner, repo)
-    const updated = await updateProject(id, toDbRow(normalized) as any)
+    const updated = await updateProject(
+      id,
+      toDbRow(normalized) as unknown as Partial<NewProject>,
+    )
     res.json(updated)
   } catch (err) {
     console.error(`POST /api/v1/projects/${id}/refresh failed:`, err)

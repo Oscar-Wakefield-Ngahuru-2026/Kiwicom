@@ -31,8 +31,8 @@ describe('getProjects', () => {
 
     expect(result).toHaveLength(1)
     expect(result[0]).toMatchObject({
-      full_name: 'Oscar-Wakefield-Ngahuru-2026/Kiwicom',
-      html_url: 'https://github.com/Oscar-Wakefield-Ngahuru-2026/Kiwicom',
+      fullName: 'Oscar-Wakefield-Ngahuru-2026/Kiwicom',
+      htmlUrl: 'https://github.com/Oscar-Wakefield-Ngahuru-2026/Kiwicom',
     })
   })
 })
@@ -50,7 +50,7 @@ describe('getProjectById', () => {
 
     expect(result).not.toBeNull()
     expect(result).toMatchObject({
-      full_name: 'Oscar-Wakefield-Ngahuru-2026/Kiwicom',
+      fullName: 'Oscar-Wakefield-Ngahuru-2026/Kiwicom',
     })
   })
 

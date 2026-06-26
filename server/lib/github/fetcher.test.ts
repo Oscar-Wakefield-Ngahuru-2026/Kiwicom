@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
@@ -16,7 +17,6 @@ vi.mock('./octokit', () => ({
 
 import octokit from './octokit'
 import { fetchAndNormalize } from './fetcher'
-import { Result } from 'postcss'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const repoFixture = JSON.parse(

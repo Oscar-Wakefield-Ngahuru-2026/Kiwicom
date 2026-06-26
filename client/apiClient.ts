@@ -8,15 +8,6 @@ export async function getGreeting() {
   return res.body.greeting as string
 }
 
-// Mirrors server JSON (snake_case until knexfile.wrapIdentifier wires camelCase translation).
-interface ProjectRow {
-  id: number
-  full_name: string
-  description: string | null
-  html_url: string
-  created_at: string
-}
-
 // View model for the card grid — derived from Project, with fullName pre-split
 // into owner + name so consumers don't need to do it. Narrower than the canonical
 // Project because the browse view doesn't need readme / aiSummary / etc.
@@ -31,15 +22,15 @@ export interface ProjectSummary {
 
 export async function getProjects(): Promise<ProjectSummary[]> {
   const res = await request.get(`${rootURL}/projects`)
-  return (res.body as ProjectRow[]).map((row) => {
-    const [ownerName, name] = row.full_name.split('/')
+  return (res.body as Project[]).map((p) => {
+    const [ownerName, name] = p.fullName.split('/')
     return {
-      id: row.id,
+      id: p.id,
       name,
-      description: row.description ?? '',
-      githubUrl: row.html_url,
+      description: p.description ?? '',
+      githubUrl: p.htmlUrl,
       ownerName,
-      createdAt: row.created_at,
+      createdAt: String(p.createdAt),
     }
   })
 }

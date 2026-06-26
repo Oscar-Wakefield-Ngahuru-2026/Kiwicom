@@ -10,7 +10,7 @@ interface GitHubRepoResponse {
   html_url: string
   homepage: string | null
   language: string | null
-  topics: string[]
+  topics?: string[]
   stargazers_count: number
   open_issues_count: number
   private: boolean
@@ -27,7 +27,7 @@ export function normalizeGitHubRepo(
     htmlUrl: repo.html_url,
     homepage: repo.homepage,
     primaryLanguage: repo.language,
-    topics: repo.topics,
+    topics: repo.topics ?? [],
     stars: repo.stargazers_count,
     openIssuesCount: repo.open_issues_count,
     isOpenSource: !repo.private && repo.license !== null,
