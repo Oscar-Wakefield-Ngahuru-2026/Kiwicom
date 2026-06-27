@@ -40,7 +40,7 @@ export default function Home() {
           <li key={project.id}>
             <ProjectCard
               id={project.id}
-              name={project.name}
+              name={project.}
               description={project.description}
               ownerName={project.ownerName}
               githubUrl={project.githubUrl}

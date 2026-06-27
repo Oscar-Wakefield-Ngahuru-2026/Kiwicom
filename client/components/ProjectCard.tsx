@@ -1,11 +1,7 @@
 import { Link } from 'react-router'
+import type { ProjectSummary } from '../../models/projects'
 
-interface Props {
-  id: number
-  name: string
-  description: string
-  ownerName: string
-  githubUrl: string
+interface Props extends ProjectSummary {
   imgUrl?: string
   tags?: string[]
 }
