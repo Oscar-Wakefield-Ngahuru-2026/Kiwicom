@@ -1,15 +1,36 @@
-import * as db from '../db/functions/projects'
+import {
+  getProjects,
+  getProjectById,
+  addProject,
+} from '../db/functions/projects'
 import { Router } from 'express'
 
 const router = Router()
 
 router.get('/', async (req, res) => {
   try {
-    const projects = await db.getProjects()
+    const projects = await getProjects()
     res.json(projects)
   } catch (err) {
     console.error(err)
     res.status(500).json({ error: 'Failed to fetch projects' })
+  }
+})
+
+// GET: /api/v1/projects/:id
+router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params
+    const project = await getProjectById(Number(id))
+
+    if (!project) {
+      return res.status(404).json({ message: 'Project not found' })
+    }
+
+    res.json(project)
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: 'Failed to fetch project' })
   }
 })
 
@@ -21,7 +42,7 @@ router.post('/', async (req, res) => {
       res.status(400).json({ error: 'fullName and htmlUrl are required' })
       return
     }
-    const newProject = await db.addProject({ fullName, description, htmlUrl })
+    const newProject = await addProject({ fullName, description, htmlUrl })
     res.status(201).json(newProject)
   } catch (error) {
     if (error instanceof Error) {

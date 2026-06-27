@@ -43,6 +43,13 @@ export async function getProjects(): Promise<ProjectSummary[]> {
     }
   })
 }
+
+export async function getProjectById(id: number): Promise<Project> {
+  const res = await request.get(`${rootURL}/projects/${id}`)
+  const project = res.body as Project
+  return project
+}
+
 export async function addProject(data: ProjectData): Promise<Project> {
   const res = await request.post(`${rootURL}/projects`).send(data)
   return res.body

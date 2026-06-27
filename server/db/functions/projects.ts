@@ -52,7 +52,18 @@ export async function getProjects(): Promise<Project[]> {
  *     not this function. DB functions stay HTTP-agnostic.
  */
 export async function getProjectById(id: number): Promise<Project | null> {
-  throw new Error('Not implemented — see Feature 5 user story.')
+  return db('projects').select(
+      'id',
+      'full_name as fullName',
+      'description',
+      'html_url as htmlUrl',
+      'homepage',
+      'topics',
+      'primary_language as primaryLanguage',
+      'open_issues_count as openIssuesCount',
+      'is_open_source as isOpenSource',
+      'last_synced_at as lastSyncedAt',
+    ).where({ id: id }).first()
 }
 
 /**
