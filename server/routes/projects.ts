@@ -3,9 +3,9 @@ import {
   getProjects,
   getProjectById,
   updateProject,
+  addProject,
 } from '../db/functions/projects'
 import { fetchAndNormalize } from '../lib/github/fetcher'
-import type { NewProject } from '../../models/projects'
 
 const router = Router()
 
@@ -19,6 +19,44 @@ router.get('/', async (req, res) => {
   }
 })
 
+// GET /api/v1/projects/:id — single project detail (Feature 5)
+router.get('/:id', async (req, res) => {
+  const id = Number(req.params.id)
+  if (!Number.isFinite(id)) {
+    return res.status(400).json({ error: 'Invalid project id' })
+  }
+
+  try {
+    const project = await getProjectById(id)
+    if (!project) {
+      return res.status(404).json({ error: 'Project not found' })
+    }
+    res.json(project)
+  } catch (err) {
+    console.error(`GET /api/v1/projects/${id} failed:`, err)
+    res.status(500).json({ error: 'Failed to fetch project' })
+  }
+})
+
+// POST /api/v1/projects — create a new project (Feature 9)
+router.post('/', async (req, res) => {
+  const { fullName, description, htmlUrl } = req.body
+  if (!fullName || !htmlUrl) {
+    return res
+      .status(400)
+      .json({ error: 'fullName and htmlUrl are required' })
+  }
+
+  try {
+    const newProject = await addProject({ fullName, description, htmlUrl })
+    res.status(201).json(newProject)
+  } catch (err) {
+    console.error('POST /api/v1/projects failed:', err)
+    res.status(500).json({ error: 'Failed to add project' })
+  }
+})
+
+// POST /api/v1/projects/:id/refresh — re-fetch from GitHub and update the row (Ticket B)
 router.post('/:id/refresh', async (req, res) => {
   const id = Number(req.params.id)
   if (!Number.isFinite(id)) {
@@ -34,38 +72,12 @@ router.post('/:id/refresh', async (req, res) => {
 
   try {
     const normalized = await fetchAndNormalize(owner, repo)
-    const updated = await updateProject(
-      id,
-      toDbRow(normalized) as unknown as Partial<NewProject>,
-    )
+    const updated = await updateProject(id, normalized)
     res.json(updated)
   } catch (err) {
     console.error(`POST /api/v1/projects/${id}/refresh failed:`, err)
     res.status(502).json({ error: 'Failed to fetch from GitHub' })
   }
 })
-
-// Temporary camelCase → snake_case mapper for the DB write.
-// Removed when Henry's projectColumns work auto-translates column names.
-function toDbRow(
-  p: Awaited<ReturnType<typeof fetchAndNormalize>>,
-): Record<string, unknown> {
-  return {
-    full_name: p.fullName,
-    description: p.description,
-    html_url: p.htmlUrl,
-    homepage: p.homepage,
-    primary_language: p.primaryLanguage,
-    topics: p.topics,
-    stars: p.stars,
-    open_issues_count: p.openIssuesCount,
-    is_open_source: p.isOpenSource,
-    license: p.license,
-    readme: p.readme,
-    ai_summary: p.aiSummary,
-    ai_summary_at: p.aiSummaryAt,
-    last_synced_at: p.lastSyncedAt,
-  }
-}
 
 export default router

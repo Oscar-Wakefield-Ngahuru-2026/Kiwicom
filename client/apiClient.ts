@@ -1,5 +1,5 @@
 import request from 'superagent'
-import type { Project } from '../models/projects'
+import type { Project, ProjectData } from '../models/projects'
 
 const rootURL = new URL(`/api/v1`, document.baseURI)
 
@@ -33,6 +33,16 @@ export async function getProjects(): Promise<ProjectSummary[]> {
       createdAt: String(p.createdAt),
     }
   })
+}
+
+export async function getProjectById(id: number): Promise<Project> {
+  const res = await request.get(`${rootURL}/projects/${id}`)
+  return res.body as Project
+}
+
+export async function addProject(data: ProjectData): Promise<Project> {
+  const res = await request.post(`${rootURL}/projects`).send(data)
+  return res.body as Project
 }
 
 export type { Project }

@@ -20,7 +20,7 @@ export default function ProjectCard({
   tags,
 }: Props) {
   return (
-     <article className="flex flex-col rounded-lg border border-slate-200 bg-white p-4 shadow-sm motion-safe:transition hover:shadow-md">
+    <article className="flex flex-col rounded-lg border border-slate-200 bg-white p-4 shadow-sm hover:shadow-md motion-safe:transition">
       {imgUrl && (
         <img
           src={imgUrl}
