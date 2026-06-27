@@ -1,5 +1,25 @@
-import { Project, NewProject } from '../../../models/projects'
+import { ProjectData, Project } from '../../../models/projects'
+
 import db from '../connection'
+
+const projectColumns = [
+  'id',
+  'full_name as fullName',
+  'description',
+  'html_url as htmlUrl',
+  'homepage',
+  'primary_language as primaryLanguage',
+  'topics',
+  'stars',
+  'open_issues_count as openIssuesCount',
+  'is_open_source as isOpenSource',
+  'license',
+  'readme',
+  'ai_summary as aiSummary',
+  'ai_summary_at as aiSummaryAt',
+  'last_synced_at as lastSyncedAt',
+  'created_at as createdAt',
+]
 
 /**
  * Return all projects in the database, newest first.
@@ -15,7 +35,7 @@ import db from '../connection'
  *   - Search by name (WHERE name ILIKE ?)
  */
 export async function getProjects(): Promise<Project[]> {
-  return db('projects').select('*').orderBy('created_at', 'desc')
+  return db('projects').select(projectColumns).orderBy('created_at', 'desc')
 }
 
 /**
@@ -60,8 +80,15 @@ export async function getProjectById(id: number): Promise<Project | null> {
  *   - Validate the github_url is a real GitHub URL in the route layer,
  *     not here. DB functions trust their inputs.
  */
-export async function addProject(data: NewProject): Promise<Project> {
-  throw new Error('Not implemented — see Feature 9 user story.')
+export async function addProject(data: Partial<ProjectData>): Promise<Project> {
+  const [project] = await db('projects')
+    .insert({
+      full_name: data.fullName,
+      description: data.description,
+      html_url: data.htmlUrl,
+    })
+    .returning(projectColumns)
+  return project
 }
 
 /**
@@ -79,7 +106,7 @@ export async function addProject(data: NewProject): Promise<Project> {
  */
 export async function updateProject(
   id: number,
-  data: Partial<NewProject>,
+  data: Partial<ProjectData>,
 ): Promise<Project | null> {
   throw new Error('Not implemented — deferred to post-MVP edit feature.')
 }
