@@ -44,4 +44,10 @@ export async function getProjects(): Promise<ProjectSummary[]> {
   })
 }
 
+export async function getProjectById(id: number): Promise<Project> {
+  const res = await request.get(`${rootURL}/projects/${id}`)
+  const project = res.body as Project
+  return project
+}
+
 export type { Project }
