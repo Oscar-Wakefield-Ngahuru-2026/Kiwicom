@@ -1,6 +1,5 @@
 import octokit from './octokit'
 
-
 export interface IssueData {
   id: number
   title: string
@@ -9,25 +8,38 @@ export interface IssueData {
   state: string
 }
 
+const BEGINNER_LABELS = ['good first issue', 'help wanted']
+
 export async function fetchProjectIssues(
   owner: string,
   repo: string,
 ): Promise<IssueData[]> {
-  const { data } = await octokit.rest.issues.listForRepo({
-    owner,
-    repo,
-    state: 'open',
-    per_page: 100,
-  })
+  // Two label-filtered calls in parallel — GitHub's labels= param is AND,
+  // not OR, so we can't ask for "either label" in one call.
+  const responses = await Promise.all(
+    BEGINNER_LABELS.map((label) =>
+      octokit.rest.issues.listForRepo({
+        owner,
+        repo,
+        state: 'open',
+        labels: label,
+        per_page: 100,
+      }),
+    ),
+  )
 
-  return data 
+  // Merge results, dedupe by id (an issue with BOTH labels would appear twice)
+  const all = responses.flatMap((r) => r.data)
+  const uniqueById = Array.from(new Map(all.map((i) => [i.id, i])).values())
+
+  return uniqueById
     .filter((item) => !item.pull_request)
     .map((item) => ({
       id: item.id,
       title: item.title,
       htmlUrl: item.html_url,
-      labels: (item.labels ?? []).map((label) => 
-        typeof label === 'string' ? label : (label.name ?? ''),
+      labels: (item.labels ?? []).map((label) =>
+        typeof label === 'string' ? label : (label.name ?? ' '),
       ),
       state: item.state,
     }))

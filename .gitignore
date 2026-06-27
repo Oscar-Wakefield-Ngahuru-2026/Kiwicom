@@ -87,3 +87,5 @@ Claude CoWork
 memeory
 *.sqlite
 *.sqlite3
+.vscode/
+.vscode/

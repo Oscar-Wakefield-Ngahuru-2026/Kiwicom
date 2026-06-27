@@ -5,7 +5,12 @@ import {
   updateProject,
   addProject,
 } from '../db/functions/projects'
+import {
+  getIssuesForProject,
+  replaceIssuesForProject,
+} from '../db/functions/issues'
 import { fetchAndNormalize } from '../lib/github/fetcher'
+import { fetchProjectIssues } from '../lib/github/issuesFetcher'
 
 const router = Router()
 
@@ -19,7 +24,6 @@ router.get('/', async (req, res) => {
   }
 })
 
-// GET /api/v1/projects/:id — single project detail (Feature 5)
 router.get('/:id', async (req, res) => {
   const id = Number(req.params.id)
   if (!Number.isFinite(id)) {
@@ -38,13 +42,10 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-// POST /api/v1/projects — create a new project (Feature 9)
 router.post('/', async (req, res) => {
   const { fullName, description, htmlUrl } = req.body
   if (!fullName || !htmlUrl) {
-    return res
-      .status(400)
-      .json({ error: 'fullName and htmlUrl are required' })
+    return res.status(400).json({ error: 'fullName and htmlUrl are required' })
   }
 
   try {
@@ -56,7 +57,6 @@ router.post('/', async (req, res) => {
   }
 })
 
-// POST /api/v1/projects/:id/refresh — re-fetch from GitHub and update the row (Ticket B)
 router.post('/:id/refresh', async (req, res) => {
   const id = Number(req.params.id)
   if (!Number.isFinite(id)) {
@@ -71,12 +71,39 @@ router.post('/:id/refresh', async (req, res) => {
   const [owner, repo] = project.fullName.split('/')
 
   try {
-    const normalized = await fetchAndNormalize(owner, repo)
+    const [normalized, allIssues] = await Promise.all([
+      fetchAndNormalize(owner, repo),
+      fetchProjectIssues(owner, repo),
+    ])
+
+    const beginnerIssues = allIssues.filter((issue) =>
+      issue.labels.some(
+        (label) => label === 'good first issue' || label === 'help wanted',
+      ),
+    )
+
     const updated = await updateProject(id, normalized)
+    await replaceIssuesForProject(id, beginnerIssues)
+
     res.json(updated)
   } catch (err) {
     console.error(`POST /api/v1/projects/${id}/refresh failed:`, err)
     res.status(502).json({ error: 'Failed to fetch from GitHub' })
+  }
+})
+
+router.get('/:id/issues', async (req, res) => {
+  const id = Number(req.params.id)
+  if (!Number.isFinite(id)) {
+    return res.status(400).json({ error: 'Invalid project id' })
+  }
+
+  try {
+    const issues = await getIssuesForProject(id)
+    res.json(issues)
+  } catch (err) {
+    console.error(`GET /api/v1/projects/${id}/issues failed:`, err)
+    res.status(500).json({ error: 'Failed to fetch issues' })
   }
 })
 
