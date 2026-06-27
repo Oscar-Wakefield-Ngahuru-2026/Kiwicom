@@ -2,8 +2,7 @@ import * as Path from 'node:path'
 import express from 'express'
 import cors, { CorsOptions } from 'cors'
 import projectsRouter from './routes/projects'
-
-
+import githubRouter from './routes/github'
 
 const server = express()
 
@@ -17,6 +16,7 @@ server.get('/api/v1/greeting', (req, res) => {
   res.json({ greeting: greetings[index] })
 })
 server.use('/api/v1/projects', projectsRouter)
+server.use('/api/v1/github', githubRouter)
 server.use(express.json())
 server.use(cors('*' as CorsOptions))
 
