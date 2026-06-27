@@ -33,8 +33,8 @@ export default function Home() {
   }
 
   return (
-    <section className='p-4'>
-      <h1 className='mb-4 text-2xl font-bold'>Browse Projects</h1>
+    <section className='bg-gray-900 min-h-screen p-4'>
+      <h1 className='mb-4 text-2xl font-bold text-blue-400'>Browse Projects</h1>
       <ul className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
         {projects.map((project) => (
           <li key={project.id}>

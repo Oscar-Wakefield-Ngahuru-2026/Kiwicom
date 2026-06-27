@@ -51,8 +51,11 @@ export async function getProjects(): Promise<Project[]> {
  *   - The caller (Express route) should translate null into a 404,
  *     not this function. DB functions stay HTTP-agnostic.
  */
+
+// Go about this with Ivonne and explain 
 export async function getProjectById(id: number): Promise<Project | null> {
   return db('projects').select(
+    // Can be refactored here, look at function above
       'id',
       'full_name as fullName',
       'description',
