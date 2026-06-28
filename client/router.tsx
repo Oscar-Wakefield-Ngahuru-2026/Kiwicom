@@ -6,8 +6,8 @@ import {
 
 import Layout from './components/Layout'
 import Home from './pages/Home'
-import ProjectPage from './components/ProjectPage'
-import CreateProject from './components/CreateProject'
+import ProjectPage from './pages/ProjectPage'
+import CreateProject from './pages/CreateProject'
 
 export const routes = createRoutesFromElements(
   <Route path="/" element={<Layout />}>
