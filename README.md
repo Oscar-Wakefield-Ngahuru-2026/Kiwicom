@@ -197,6 +197,54 @@ Details will be added here once stretch features are scoped.
 | DELETE | /api/v1/bookmarks/:projectId | Remove a bookmark | deleteBookmark(userId, projectId) | n/a | status 204 |
 | GET | /api/v1/github/search | Proxy search to GitHub API (Octokit) | n/a (external API) | n/a (query params) | GitHub repo\[\] |
 | POST | /api/v1/summary | Generate AI summary of a project's README | n/a (external API) | { readme, projectId } | { summary } |
+| POST | /api/v1/projects/:id/refresh | Re-fetch one project's metadata + README + labeled issues from GitHub | updateProject(id, data) + replaceIssuesForProject(id, issues) | n/a | updated Project object |
+
+---
+
+## GitHub API integration
+
+The home page renders real GitHub project data via four endpoints. All data is normalised to camelCase before it reaches the frontend.
+
+### What's there
+
+- **Seed script** — populates the projects table with a curated list of repos. Reads `server/scripts/seedProjects.json`. Safe to re-run.
+  ```bash
+  npm run db:seed-github
+  ```
+
+- **Refresh route** — re-fetches a single project plus its labeled issues from GitHub.
+  ```
+  POST /api/v1/projects/:id/refresh
+  ```
+
+- **Live search** — proxies to GitHub's search and returns results without saving them.
+  ```
+  GET /api/v1/github/search?q=<query>&page=<n>
+  ```
+
+- **Issues for a project** — returns the stored beginner-friendly issues (`good first issue` or `help wanted`) for a project.
+  ```
+  GET /api/v1/projects/:id/issues
+  ```
+
+### Mental model
+
+```
+GitHub  →  normalise  →  Supabase  →  frontend sees camelCase
+```
+
+GitHub uses snake_case. Everything downstream of the normaliser uses camelCase. That conversion happens in one place per direction (read and write), so the rest of the code stays clean.
+
+### Setup
+
+See the **Environment Variables** section below — you'll need a `GITHUB_TOKEN` for the seed, refresh, and search routes to work.
+
+### Deeper reading
+
+- [`docs/sprint-2-github-api.md`](docs/sprint-2-github-api.md) — original architecture / design doc
+- [`docs/sprint-2-walkthrough.md`](docs/sprint-2-walkthrough.md) — plain-language walkthrough of what was built and why
+
+Happy to pair-walk through any of this if it's useful.
 
 ---
 
