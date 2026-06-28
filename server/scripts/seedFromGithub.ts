@@ -1,3 +1,9 @@
+// This script fills our database with a starter list of GitHub projects.
+// You run it once with `npm run db:seed-github`. It reads the list of
+// owner/repo strings from seedProjects.json, asks GitHub for each one's
+// data, and saves them to the projects table. Safe to re-run — it won't
+// duplicate rows.
+
 import 'dotenv/config'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'

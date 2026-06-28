@@ -1,3 +1,8 @@
+// This file sets up our GitHub API client.
+// We create it once here and import it everywhere else, so the rest of
+// the code can just say "ask GitHub for X" without setting up a new
+// connection every time. It reads GITHUB_TOKEN from the .env file.
+
 import 'dotenv/config'
 import { Octokit } from 'octokit'
 

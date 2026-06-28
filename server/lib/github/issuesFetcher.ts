@@ -1,3 +1,9 @@
+// This file fetches beginner-friendly issues from a GitHub repo.
+// We're looking for two labels: "good first issue" and "help wanted".
+// It has to make two API calls (one per label) and merge the results,
+// because GitHub's labels= filter matches issues that have BOTH labels,
+// not either one.
+
 import octokit from './octokit'
 
 export interface IssueData {

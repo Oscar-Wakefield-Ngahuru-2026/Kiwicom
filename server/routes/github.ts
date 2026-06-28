@@ -1,3 +1,9 @@
+// This file defines our GitHub search endpoint.
+// The browser asks our server to search; our server asks GitHub; we
+// send the results back. This way our GitHub token stays on the server
+// instead of being exposed in the browser, and we can swap in OAuth
+// later without changing the frontend.
+
 import { Router } from 'express'
 import octokit from '../lib/github/octokit'
 import { normalizeGitHubRepo } from '../lib/github/normalizer'

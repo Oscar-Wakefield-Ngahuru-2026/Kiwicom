@@ -1,3 +1,8 @@
+// This file holds all the database queries about issues.
+// replaceIssuesForProject wraps the delete + insert in a transaction,
+// which means both succeed or both fail — never a half-done state where
+// a project has no issues because the re-insert crashed midway.
+
 import db from '../connection'
 import type { IssueData } from '../../lib/github/issuesFetcher'
 

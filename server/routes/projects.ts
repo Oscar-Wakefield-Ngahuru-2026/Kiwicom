@@ -1,3 +1,9 @@
+// This file defines the HTTP endpoints for projects.
+// Each route maps a URL (like POST /api/v1/projects/:id/refresh) to a
+// database function or a GitHub fetcher. The routes don't contain logic
+// themselves — they validate the input, call the right helper, and
+// shape the response. The actual work lives in db/functions and lib/.
+
 import { Router } from 'express'
 import {
   getProjects,

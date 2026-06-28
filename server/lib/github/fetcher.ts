@@ -1,3 +1,8 @@
+// This file fetches a single repo's data from GitHub.
+// It makes two calls — one for the repo's metadata, one for the README —
+// and runs the result through the normaliser so the rest of our code
+// gets camelCase. Used by the seed script and the refresh route.
+
 import octokit from './octokit'
 import { normalizeGitHubRepo } from './normalizer'
 

@@ -1,7 +1,9 @@
-import type { Project } from '../../../models/projects'
+// This file translates GitHub's data shape into our app's data shape.
+// GitHub names its fields in snake_case (full_name, html_url, stargazers_count).
+// Our codebase uses camelCase (fullName, htmlUrl, stars). This is the one
+// place that translation happens — everything downstream sees camelCase.
 
-// snake_case fields below are GitHub's REST API format (Ruby heritage).
-// This function is the boundary — every consumer downstream sees camelCase.
+import type { Project } from '../../../models/projects'
 
 interface GitHubRepoResponse {
   id: number

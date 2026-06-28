@@ -1,3 +1,9 @@
+// This file holds all the database queries about projects.
+// The two helpers at the top (projectColumns and projectToRow) translate
+// between our camelCase code and the database's snake_case columns —
+// reads come back as camelCase, writes go in as snake_case. Every query
+// function below uses one or both of them.
+
 import { ProjectData, Project } from '../../../models/projects'
 import db from '../connection'
 
