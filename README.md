@@ -244,7 +244,7 @@ See the **Environment Variables** section below — you'll need a `GITHUB_TOKEN`
 - [`docs/sprint-2-github-api.md`](docs/sprint-2-github-api.md) — original architecture / design doc
 - [`docs/sprint-2-walkthrough.md`](docs/sprint-2-walkthrough.md) — plain-language walkthrough of what was built and why
 
-Happy to pair-walk through any of this if it's useful.
+Recommend repo scope when generating PATs — When you generate a Personal Access Token for this project, give it the repo scope. That covers everything Octokit needs and lets gh work normally.
 
 ---
 
