@@ -5,9 +5,9 @@ import {
 } from 'react-router'
 
 import Layout from './components/Layout'
-import Home from './components/Home'
-import ProjectPage from './components/ProjectPage'
-import CreateProject from './components/CreateProject'
+import Home from './pages/Home'
+import ProjectPage from './pages/ProjectPage'
+import CreateProject from './pages/CreateProject'
 
 export const routes = createRoutesFromElements(
   <Route path="/" element={<Layout />}>

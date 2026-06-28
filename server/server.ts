@@ -15,10 +15,9 @@ server.get('/api/v1/greeting', (req, res) => {
   console.log(index)
   res.json({ greeting: greetings[index] })
 })
+
 server.use('/api/v1/projects', projectsRouter)
 server.use('/api/v1/github', githubRouter)
-server.use(express.json())
-server.use(cors('*' as CorsOptions))
 
 if (process.env.NODE_ENV === 'production') {
   server.use(express.static(Path.resolve('public')))
