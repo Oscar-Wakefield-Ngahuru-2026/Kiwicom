@@ -5,7 +5,7 @@ import {
 } from 'react-router'
 
 import Layout from './components/Layout'
-import Home from './components/Home'
+import Home from './pages/Home'
 import ProjectPage from './components/ProjectPage'
 import CreateProject from './components/CreateProject'
 
