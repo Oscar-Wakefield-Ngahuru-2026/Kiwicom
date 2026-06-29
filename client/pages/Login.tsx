@@ -1,7 +1,11 @@
 import { useAuth } from '../hooks/use-auth'
+import { Navigate } from 'react-router'
 
 export default function Login() {
-  const { signIn } = useAuth()
+  const { isLoggedIn, signIn } = useAuth()
+  if (isLoggedIn) {
+    return <Navigate to="/" replace />
+  }
 
   return (
     <div>

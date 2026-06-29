@@ -8,20 +8,35 @@ function Navbar() {
       <Link to="/" className="text-xl font-bold">
         KIWICOM.COM
       </Link>
-      <Link to="/projects/new">Add Project</Link>
+      <Link to="/projects/new" className="text-sm font-medium">
+        Add Project
+      </Link>
 
       {user ? (
-        <div>
+        <div className="flex items-center gap-3">
           <img
             // Standard shape for Supabase + GitHub OAuth
             src={user.user_metadata.avatar_url}
             alt={user.user_metadata.user_name}
+            className="h-8 w-8 rounded-full"
           />
-          <span>{user.user_metadata.user_name}</span>
-          <button onClick={signOut}>Sign out</button>
+          <span className="text-sm font-medium">
+            {user.user_metadata.user_name}
+          </span>
+          <button
+            onClick={signOut}
+            className="text-sm text-slate-500 hover:text-slate-900"
+          >
+            Sign out
+          </button>
         </div>
       ) : (
-        <button onClick={signIn}>Sign-in with GitHub</button>
+        <button
+          onClick={signIn}
+          className="text-sm font-medium hover:underline"
+        >
+          Sign-in with GitHub
+        </button>
       )}
     </nav>
   )
