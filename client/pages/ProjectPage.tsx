@@ -2,13 +2,18 @@ import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router'
 import { getProjectById } from '../apiClient'
 
-
 function ProjectPage() {
+  const { id } = useParams()
+  const projectId = Number(id)
 
-  const {id} = useParams()
-  const projectId = Number (id)
-
-  const {data: project,isPending,isError} = useQuery({ queryKey: ['project', projectId], queryFn: () => getProjectById(projectId) })
+  const {
+    data: project,
+    isPending,
+    isError,
+  } = useQuery({
+    queryKey: ['project', projectId],
+    queryFn: () => getProjectById(projectId),
+  })
 
   if (isPending) {
     return <p>loading project...</p>
@@ -19,17 +24,103 @@ function ProjectPage() {
   }
 
   return (
-     <div>
-      <h1>Project name : {project.fullName}</h1>
-      <p>Description: {project.description}</p>
-      <p>GitHub url: {project.htmlUrl}</p>
-      <p>Homepage: {project.homepage}</p>
-      <p>Topics: {project.topics?.join(',')}</p>
-      <p>Programing language: {project.primaryLanguage}</p>
-      <p>Open issues : {project.openIssuesCount}</p>
-      <p>Is open source? :{project.isOpenSource ? 'Yes':'No'}</p>
-      <p>Last synced: {project.lastSyncedAt}</p>
-     </div>
+    <div className="min-h-screen bg-slate-300 p-8">
+      <div className="mx-auto max-w-3xl">
+        <h1 className="mb-6 text-2xl font-bold">{project.fullName}</h1>
+
+        <div className="mb-6 flex h-64 w-full items-center justify-center rounded-lg bg-gray-200">
+          <span className="text-gray-400">No image available</span>
+        </div>
+
+        <div className="mb-8 space-y-3 text-base text-gray-800">
+          <p>
+            <span className="font-semibold">Description:</span>{' '}
+            {project.description}
+          </p>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="font-semibold">Topics:</span>
+            {project.topics?.map((topic) => (
+              <span
+                key={topic}
+                className="rounded-full bg-green-100 px-3 py-1 text-sm text-green-800"
+              >
+                {topic}
+              </span>
+            ))}
+          </div>
+
+          <p>
+            <span className="font-semibold">Language:</span>{' '}
+            {project.primaryLanguage}
+          </p>
+          <p>
+            <span className="font-semibold">Stars:</span> {project.stars}
+          </p>
+          <p>
+            <span className="font-semibold">Open issues:</span>{' '}
+            {project.openIssuesCount}
+          </p>
+          <p>
+            <span className="font-semibold">Open source:</span>{' '}
+            {project.isOpenSource ? 'Yes' : 'No'}
+          </p>
+
+          {project.license && (
+            <p>
+              <span className="font-semibold">License:</span> {project.license}
+            </p>
+          )}
+
+          {project.homepage && (
+            <p>
+              <span className="font-semibold">Homepage:</span>{' '}
+              <a
+                href={project.homepage}
+                className="text-blue-600 underline"
+                target="_blank"
+                rel="noreferrer"
+              >
+                {project.homepage}
+              </a>
+            </p>
+          )}
+
+          {project.aiSummary && (
+            <div>
+              <span className="font-semibold">AI Summary:</span>
+              <p className="mt-1 rounded-lg bg-gray-100 p-3">
+                {project.aiSummary}
+              </p>
+            </div>
+          )}
+
+          {project.readme && (
+            <div>
+              <span className="font-semibold">README:</span>
+              <pre className="mt-1 max-h-64 overflow-auto whitespace-pre-wrap rounded-lg bg-gray-100 p-3 text-xs">
+                {project.readme}
+              </pre>
+            </div>
+          )}
+
+          {project.lastSyncedAt && (
+            <p className="text-xs text-gray-400">
+              Last synced: {new Date(project.lastSyncedAt).toLocaleDateString()}
+            </p>
+          )}
+        </div>
+
+        <a
+          href={project.htmlUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-block rounded-full border-2 border-black bg-gray-200 px-6 py-3 font-bold transition-colors hover:border-green-600 hover:bg-green-600 hover:text-white"
+        >
+          Take me to GitHub repo
+        </a>
+      </div>
+    </div>
   )
 }
 
