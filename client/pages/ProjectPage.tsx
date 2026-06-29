@@ -1,10 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router'
 import { getProjectById } from '../apiClient'
+import { useAuth } from '../hooks/use-auth'
 
 function ProjectPage() {
   const { id } = useParams()
   const projectId = Number(id)
+  const { isLoggedIn, signIn } = useAuth()
 
   const {
     data: project,
@@ -112,12 +114,13 @@ function ProjectPage() {
         </div>
 
         <a
-          href={project.htmlUrl}
+          href={isLoggedIn ? project.htmlUrl : undefined}
+          onClick={!isLoggedIn ? signIn : undefined}
           target="_blank"
           rel="noreferrer"
           className="inline-block rounded-full border-2 border-black bg-gray-200 px-6 py-3 font-bold transition-colors hover:border-green-600 hover:bg-green-600 hover:text-white"
         >
-          Take me to GitHub repo
+          {isLoggedIn ? 'Take me to GitHub repo' : 'Sign in to view repo'}
         </a>
       </div>
     </div>
