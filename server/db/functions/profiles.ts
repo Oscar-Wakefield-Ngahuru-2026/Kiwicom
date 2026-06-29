@@ -14,5 +14,5 @@ export async function upsertProfile(data: ProfileData): Promise<void> {
       avatar_url: data.avatarUrl,
     })
     .onConflict('id') // if a row with `id` already exists, ignore
-    .ignore()
+    .ignore() // `.onConflict().ignore()` is Knex; `.upsert()` is Supabase equivalent
 }
