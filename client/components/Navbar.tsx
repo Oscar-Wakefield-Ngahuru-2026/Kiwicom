@@ -1,11 +1,43 @@
 import { Link } from 'react-router'
+import { useAuth } from '../hooks/use-auth'
 
 function Navbar() {
+  const { user, isLoggedIn, signIn, signOut } = useAuth()
   return (
-    <nav className="flex justify-between items-center px-6 py-4 border-b">
-      <Link to="/" className="font-bold text-xl">KIWICOM.COM</Link>
-      <Link to="/projects/new">Add Project</Link>
-      <p>Welcome back, theDev2026!</p>
+    <nav className="flex items-center justify-between border-b px-6 py-4">
+      <Link to="/" className="text-xl font-bold">
+        KIWICOM.COM
+      </Link>
+      <Link to="/projects/new" className="text-sm font-medium">
+        Add Project
+      </Link>
+
+      {user ? (
+        <div className="flex items-center gap-3">
+          <img
+            // Standard shape for Supabase + GitHub OAuth
+            src={user.user_metadata.avatar_url}
+            alt={user.user_metadata.user_name}
+            className="h-8 w-8 rounded-full"
+          />
+          <span className="text-sm font-medium">
+            {user.user_metadata.user_name}
+          </span>
+          <button
+            onClick={signOut}
+            className="text-sm text-slate-500 hover:text-slate-900"
+          >
+            Sign out
+          </button>
+        </div>
+      ) : (
+        <button
+          onClick={signIn}
+          className="text-sm font-medium hover:underline"
+        >
+          Sign-in with GitHub
+        </button>
+      )}
     </nav>
   )
 }
