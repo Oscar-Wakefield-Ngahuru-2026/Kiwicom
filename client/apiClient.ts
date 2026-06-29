@@ -3,6 +3,14 @@ import type { Project, ProjectData, ProjectSummary } from '../models/projects'
 
 const rootURL = new URL(`/api/v1`, document.baseURI)
 
+export async function upsertProfile(data: {
+  id: string
+  githubUsername: string
+  avatarUrl: string
+}): Promise<void> {
+  await request.post(`${rootURL}/profiles`).send(data)
+}
+
 export async function getGreeting() {
   const res = await request.get(`${rootURL}/greeting`)
   return res.body.greeting as string
