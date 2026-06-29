@@ -4,11 +4,11 @@ import { useAuth } from '../hooks/use-auth'
 function Navbar() {
   const { user, isLoggedIn, signIn, signOut } = useAuth()
   return (
-    <nav className="flex items-center justify-between border-b px-6 py-4">
+    <nav className="flex items-center justify-between bg-gradient-to-r from-green-400 to-blue-300 px-6 py-4">
       <Link to="/" className="text-xl font-bold">
         KIWICOM.COM
       </Link>
-      <Link to="/projects/new" className="text-sm font-medium">
+      <Link to="/projects/new" className="font-semibold text-gray-900">
         Add Project
       </Link>
 
@@ -25,7 +25,7 @@ function Navbar() {
           </span>
           <button
             onClick={signOut}
-            className="text-sm text-slate-500 hover:text-slate-900"
+            className="text-sm text-slate-600 hover:text-slate-900"
           >
             Sign out
           </button>
