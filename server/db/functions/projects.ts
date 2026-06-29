@@ -52,21 +52,9 @@ export async function getProjects(): Promise<Project[]> {
  *     not this function. DB functions stay HTTP-agnostic.
  */
 
-// Go about this with Ivonne and explain 
+// Go about this with Ivonne and explain
 export async function getProjectById(id: number): Promise<Project | null> {
-  return db('projects').select(
-    // Can be refactored here, look at function above
-      'id',
-      'full_name as fullName',
-      'description',
-      'html_url as htmlUrl',
-      'homepage',
-      'topics',
-      'primary_language as primaryLanguage',
-      'open_issues_count as openIssuesCount',
-      'is_open_source as isOpenSource',
-      'last_synced_at as lastSyncedAt',
-    ).where({ id: id }).first()
+  return db('projects').select(projectColumns).where({ id }).first()
 }
 
 /**
