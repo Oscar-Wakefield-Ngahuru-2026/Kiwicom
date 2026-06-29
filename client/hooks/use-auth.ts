@@ -6,12 +6,14 @@ import { upsertProfile } from '../apiClient'
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null) // Auth state starts as null - not logged in
   const [loading, setLoading] = useState(true)
+  const [token, setToken] = useState<string | null>(null)
 
   useEffect(() => {
     // Check if a session already exists (handles page refresh)
     // "Void" to explicitly say the return value is not needed
     void supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null)
+      setToken(session?.provider_token ?? null)
       setLoading(false)
     })
 
@@ -20,6 +22,7 @@ export function useAuth() {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null)
+      setToken(session?.provider_token ?? null)
       if (event === 'SIGNED_IN' && session?.user) {
         const { id, user_metadata } = session.user
         void upsertProfile({
@@ -46,6 +49,7 @@ export function useAuth() {
     user,
     isLoggedIn: user !== null,
     loading,
+    token,
     signIn,
     signOut,
   }
