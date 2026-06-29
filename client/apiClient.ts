@@ -45,38 +45,32 @@ export async function getProjectById(id: number): Promise<Project> {
   return project
 }
 
-//This is the view model for the developer profile page. Some fields come from the DB profile
-//such as (githubUsername,avatarUrl, bio); the rest will populate when the database profiles schema is extended.
-//I did not extend the Schema this will need to be another ticket that is picked up.
+// View model for the developer profile page. Comes back from the
+// GET /api/v1/profiles/:username endpoint, populated with the columns
+// added in the 20260629213147_extend_profiles migration.
 
 export interface DeveloperProfile {
+  id: string
   githubUsername: string
   avatarUrl: string | null
   bio: string | null
   role: string | null
   location: string | null
   githubLink: string
-  socialLinks: { label: string; url: string }[]
   hobbies: string[]
+  socialLinks: { label: string; url: string }[]
+  createdAt: string
 }
-
-//TODO(api): replace stub with real GET /api/v1/profiles/:username call when profile endpoints exist
-
-//TODO(schema): role,location, socialLinks, hobbies populate from DB once columns have been added;
-//profiles table currently only has githubUsername, avatarUrl and bio.
 
 export async function getProfileByUsername(
   username: string,
 ): Promise<DeveloperProfile> {
+  const res = await request.get(`${rootURL}/profiles/${username}`)
+  const profile = res.body
   return {
-    githubUsername: username,
-    avatarUrl: null,
-    bio: 'Stub bio -wiring up real profiles endpoint pending',
-    role: 'Developer',
-    location: 'Aotearoa',
-    githubLink: `https://github.com/${username}`,
-    socialLinks: [],
-    hobbies: [],
+    ...profile,
+    githubLink:
+      profile.githubLink ?? `https://github.com/${profile.githubUsername}`,
   }
 }
 
