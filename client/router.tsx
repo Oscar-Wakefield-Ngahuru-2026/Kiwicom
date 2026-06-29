@@ -4,6 +4,8 @@ import {
   Route,
 } from 'react-router'
 
+import ProtectedRoute from './components/ProtectedRoute'
+
 import Layout from './components/Layout'
 import Home from './pages/Home'
 import ProjectPage from './pages/ProjectPage'
@@ -14,8 +16,11 @@ export const routes = createRoutesFromElements(
   <Route path="/" element={<Layout />}>
     <Route index element={<Home />} />
     <Route path="projects/:id" element={<ProjectPage />} />
-    <Route path="projects/new" element={<CreateProject />} />
     <Route path="login" element={<Login />} />
+
+    <Route element={<ProtectedRoute />}>
+      <Route path="projects/new" element={<CreateProject />} />
+    </Route>
   </Route>,
 )
 
