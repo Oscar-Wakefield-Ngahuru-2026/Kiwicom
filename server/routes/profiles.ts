@@ -19,4 +19,18 @@ router.post('/', async (req, res) => {
   }
 })
 
+router.get('/:username', async (req, res) => {
+  try {
+    const { username } = req.params
+    const profile = await db.getProfileByUsername(username)
+    if (!profile) {
+      return res.status(404).json({ error: 'Profile not found' })
+    }
+    res.json(profile)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Failed to fetch profile' })
+  }
+})
+
 export default router
