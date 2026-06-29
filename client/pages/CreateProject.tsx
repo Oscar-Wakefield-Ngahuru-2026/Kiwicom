@@ -41,7 +41,12 @@ export default function CreateProject() {
       <h1 className="mb-6 text-2xl font-bold">Add a Project</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         <div className="flex flex-col gap-1">
-          <label htmlFor="fullName" className="text-sm font-medium text-slate-700">Project Name</label>
+          <label
+            htmlFor="fullName"
+            className="text-sm font-medium text-slate-700"
+          >
+            Project Name
+          </label>
           <input
             id="fullName"
             name="fullName"
@@ -54,7 +59,12 @@ export default function CreateProject() {
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="description" className="text-sm font-medium text-slate-700">Project Description</label>
+          <label
+            htmlFor="description"
+            className="text-sm font-medium text-slate-700"
+          >
+            Project Description
+          </label>
           <textarea
             name="description"
             id="description"
@@ -67,7 +77,12 @@ export default function CreateProject() {
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="htmlUrl" className="text-sm font-medium text-slate-700">GitHub Link</label>
+          <label
+            htmlFor="htmlUrl"
+            className="text-sm font-medium text-slate-700"
+          >
+            GitHub Link
+          </label>
           <input
             id="htmlUrl"
             name="htmlUrl"
@@ -86,7 +101,11 @@ export default function CreateProject() {
         >
           {mutation.isPending ? 'Adding...' : 'Add'}
         </button>
-        {mutation.isError && <p className="text-sm text-red-600">Something went wrong. Try again.</p>}
+        {mutation.isError && (
+          <p className="text-sm text-red-600">
+            Something went wrong. Try again.
+          </p>
+        )}
       </form>
     </div>
   )
