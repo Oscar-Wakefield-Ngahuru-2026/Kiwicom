@@ -3,6 +3,14 @@ import type { Project, ProjectData, ProjectSummary } from '../models/projects'
 
 const rootURL = new URL(`/api/v1`, document.baseURI)
 
+export async function upsertProfile(data: {
+  id: string
+  githubUsername: string
+  avatarUrl: string
+}): Promise<void> {
+  await request.post(`${rootURL}/profiles`).send(data)
+}
+
 export async function getGreeting() {
   const res = await request.get(`${rootURL}/greeting`)
   return res.body.greeting as string
@@ -35,6 +43,41 @@ export async function getProjectById(id: number): Promise<Project> {
   const res = await request.get(`${rootURL}/projects/${id}`)
   const project = res.body as Project
   return project
+}
+
+//This is the view model for the developer profile page. Some fields come from the DB profile
+//such as (githubUsername,avatarUrl, bio); the rest will populate when the database profiles schema is extended.
+//I did not extend the Schema this will need to be another ticket that is picked up.
+
+export interface DeveloperProfile {
+  githubUsername: string
+  avatarUrl: string | null
+  bio: string | null
+  role: string | null
+  location: string | null
+  githubLink: string
+  socialLinks: { label: string; url: string }[]
+  hobbies: string[]
+}
+
+//TODO(api): replace stub with real GET /api/v1/profiles/:username call when profile endpoints exist
+
+//TODO(schema): role,location, socialLinks, hobbies populate from DB once columns have been added;
+//profiles table currently only has githubUsername, avatarUrl and bio.
+
+export async function getProfileByUsername(
+  username: string,
+): Promise<DeveloperProfile> {
+  return {
+    githubUsername: username,
+    avatarUrl: null,
+    bio: 'Stub bio -wiring up real profiles endpoint pending',
+    role: 'Developer',
+    location: 'Aotearoa',
+    githubLink: `https://github.com/${username}`,
+    socialLinks: [],
+    hobbies: [],
+  }
 }
 
 export async function addProject(data: ProjectData): Promise<Project> {
