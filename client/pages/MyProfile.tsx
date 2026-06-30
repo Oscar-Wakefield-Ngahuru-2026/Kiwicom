@@ -319,7 +319,7 @@ export default function MyProfile() {
               Add social link
             </button>
           </section>
-          
+
           <section aria-labelledby="bookmarked-heading">
             <h2 id="bookmarked-heading" className="text-xl font-bold">
               Bookmarked projects
@@ -336,12 +336,21 @@ export default function MyProfile() {
                     key={project.id}
                     className="rounded border border-slate-200 p-3"
                   >
-                    <Link
-                      to={`/projects/${project.id}`}
-                      className="text-sm font-semibold text-blue-700 hover:underline focus-visible:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500"
-                    >
-                      {project.fullName}
-                    </Link>
+                    <p className="text-sm font-semibold">
+                      <Link
+                        to={`/developers/${project.fullName.split('/')[0]}`}
+                        className="text-blue-700 hover:underline focus-visible:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
+                      >
+                        {project.fullName.split('/')[0]}
+                      </Link>
+                      <span className="text-slate-700">/</span>
+                      <Link
+                        to={`/projects/${project.id}`}
+                        className="text-blue-700 hover:underline focus-visible:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
+                      >
+                        {project.fullName.split('/')[1]}
+                      </Link>
+                    </p>
                     {project.description && (
                       <p className="mt-1 text-xs text-slate-600">
                         {project.description}
