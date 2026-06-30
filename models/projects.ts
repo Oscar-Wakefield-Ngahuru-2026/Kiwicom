@@ -27,4 +27,5 @@ export interface ProjectSummary {
   githubUrl: string
   ownerName: string
   createdAt: string
+  topics: string[] | null
 }
