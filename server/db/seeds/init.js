@@ -33,7 +33,7 @@ export async function seed(knex) {
       description: 'Community hub for NZ devs',
       html_url: 'https://github.com/Ivonnita/kiwicom',
       primary_language: 'TypeScript',
-      topics: ['react', 'open-source'],
+      topics: ['react'],
       stars: 142,
       open_issues_count: 3,
       is_open_source: true,
