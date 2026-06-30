@@ -3,6 +3,7 @@ import express from 'express'
 import cors, { CorsOptions } from 'cors'
 import projectsRouter from './routes/projects'
 import profileRouter from './routes/profiles'
+import githubRouter from './routes/github'
 import bookmarksRouter from './routes/bookmarks'
 
 const server = express()
@@ -20,6 +21,8 @@ server.get('/api/v1/greeting', (req, res) => {
 server.use('/api/v1/projects', projectsRouter)
 server.use('/api/v1/bookmarks', bookmarksRouter)
 server.use('/api/v1/profiles', profileRouter)
+
+server.use('/api/v1/github', githubRouter)
 
 if (process.env.NODE_ENV === 'production') {
   server.use(express.static(Path.resolve('public')))

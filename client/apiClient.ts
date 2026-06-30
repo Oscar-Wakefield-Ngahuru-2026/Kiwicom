@@ -121,3 +121,27 @@ export async function removeBookmark(
 }
 
 export type { Project }
+
+export interface RepoResult {
+  fullName: string
+  description: string
+  htmlUrl: string
+  homepage: string
+  topics: string[]
+  primaryLanguage: string
+  stars: number
+  openIssuesCount: number
+  isOpenSource: boolean
+  license: string | null
+}
+
+export async function getGithubRepos(
+  token: string,
+  search: string,
+): Promise<RepoResult[]> {
+  const res = await request
+    .get(`${rootURL}/github/repos`)
+    .set('Authorization', `Bearer ${token}`)
+    .query({ search })
+  return res.body as RepoResult[]
+}
