@@ -23,8 +23,13 @@ export interface Project extends ProjectData {
 export interface ProjectSummary {
   id: number
   name: string
+  ownerName: string
   description: string | null
   githubUrl: string
-  ownerName: string
+  primaryLanguage: string | null
+  topics: string[] | null
+  stars: number
+  openIssuesCount: number
+  isOpenSource: boolean
   createdAt: string
 }

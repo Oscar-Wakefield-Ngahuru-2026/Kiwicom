@@ -16,24 +16,22 @@ export async function getGreeting() {
   return res.body.greeting as string
 }
 
-interface ProjectRow {
-  id: number
-  fullName: string
-  description: string | null
-  htmlUrl: string
-  createdAt: string
-}
 
 export async function getProjects(): Promise<ProjectSummary[]> {
   const res = await request.get(`${rootURL}/projects`)
-  return (res.body as ProjectRow[]).map((row) => {
+  return (res.body as Project[]).map((row) => {
     const [ownerName, name] = row.fullName.split('/')
     return {
       id: row.id,
       name,
+      ownerName,
       description: row.description ?? '',
       githubUrl: row.htmlUrl,
-      ownerName,
+      primaryLanguage: row.primaryLanguage,
+      topics: row.topics,
+      stars: row.stars,
+      openIssuesCount: row.openIssuesCount,
+      isOpenSource: row.isOpenSource,
       createdAt: row.createdAt,
     }
   })
