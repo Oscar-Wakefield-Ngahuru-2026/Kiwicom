@@ -3,7 +3,6 @@ import type { ProjectSummary } from '../../models/projects'
 
 interface Props extends ProjectSummary {
   imgUrl?: string
-  tags?: string[]
 }
 
 export default function ProjectCard({
@@ -13,7 +12,7 @@ export default function ProjectCard({
   ownerName,
   githubUrl,
   imgUrl,
-  tags,
+  topics,
 }: Props) {
   return (
     <article className="flex flex-col rounded-lg border border-slate-200 bg-white p-4 shadow-sm hover:shadow-md motion-safe:transition">
@@ -37,14 +36,14 @@ export default function ProjectCard({
       <p className="mt-1 text-sm text-slate-600">by {ownerName}</p>
       <p className="mt-2 text-sm text-slate-700">{description}</p>
 
-      {tags && tags.length > 0 && (
+      {topics && topics.length > 0 && (
         <ul className="mt-3 flex flex-wrap gap-2">
-          {tags.map((tag) => (
+          {topics.map((topic) => (
             <li
-              key={tag}
-              className="rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-700"
+              key={topic}
+              className="rounded-full bg-teal-100 px-2 py-0.5 text-xs text-slate-700"
             >
-              {tag}
+              {topic}
             </li>
           ))}
         </ul>
