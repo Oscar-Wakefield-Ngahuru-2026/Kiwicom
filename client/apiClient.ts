@@ -99,6 +99,27 @@ export async function addProject(data: ProjectData): Promise<Project> {
   return res.body
 }
 
+export async function getBookmarkedProjects(
+  userId: string,
+): Promise<Project[]> {
+  const res = await request.get(`${rootURL}/bookmarks/${userId}`)
+  return res.body as Project[]
+}
+
+export async function addBookmark(
+  userId: string,
+  projectId: number,
+): Promise<void> {
+  await request.post(`${rootURL}/bookmarks`).send({ userId, projectId })
+}
+
+export async function removeBookmark(
+  userId: string,
+  projectId: number,
+): Promise<void> {
+  await request.delete(`${rootURL}/bookmarks/${userId}/${projectId}`)
+}
+
 export type { Project }
 
 export interface RepoResult {
