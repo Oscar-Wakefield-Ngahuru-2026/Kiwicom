@@ -79,7 +79,15 @@ export default function ProjectCard({
         </button>
       )}
 
-      <p className="mt-1 text-sm text-slate-600">by {ownerName}</p>
+      <p className="mt-1 text-sm text-slate-600">
+        by{' '}
+        <Link
+          to={`/developers/${ownerName}`}
+          className="text-blue-700 hover:underline focus-visible:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
+        >
+          {ownerName}
+        </Link>
+      </p>
       <p className="mt-2 text-sm text-slate-700">{description}</p>
 
       {topics && topics.length > 0 && (

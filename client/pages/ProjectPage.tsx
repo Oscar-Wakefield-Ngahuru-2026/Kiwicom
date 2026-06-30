@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { useParams } from 'react-router'
+import { useParams, Link } from 'react-router'
 import {
   getProjectById,
   getBookmarkedProjects,
@@ -56,7 +56,15 @@ function ProjectPage() {
   return (
     <div className="min-h-screen bg-slate-300 p-8">
       <div className="mx-auto max-w-3xl">
-        <h1 className="mb-6 text-2xl font-bold">{project.fullName}</h1>
+        <h1 className="mb-6 text-2xl font-bold">
+          <Link
+            to={`/developers/${project.fullName.split('/')[0]}`}
+            className="text-blue-700 hover:underline focus-visible:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
+          >
+            {project.fullName.split('/')[0]}
+          </Link>
+          /{project.fullName.split('/')[1]}
+        </h1>
         {isLoggedIn && (
           <button
             type="button"
