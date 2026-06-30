@@ -1,5 +1,8 @@
 import db from '../connection'
-import type { ProfileRecord } from '../../../models/profiles'
+import type {
+  ProfileData as ProfileFields,
+  ProfileRecord,
+} from '../../../models/profiles'
 
 interface ProfileData {
   id: string
@@ -55,3 +58,60 @@ export async function getProfileByUsername(
     socialLinks,
   }
 }
+
+// Mirror image for writes: convert a camelCase Partial<ProfileFields>
+// into a snake_case object Knex will pass through to Postgres.
+// Only the fields the caller actually sets get written.
+
+function profileToRow(data: Partial<ProfileFields>): Record<string, unknown> {
+  const row: Record<string, unknown> = {}
+  if (data.githubUsername !== undefined)
+    row.github_username = data.githubUsername
+  if (data.avatarUrl !== undefined) row.avatar_url = data.avatarUrl
+  if (data.bio !== undefined) row.bio = data.bio
+  if (data.role !== undefined) row.role = data.role
+  if (data.location !== undefined) row.location = data.location
+  if (data.githubLink !== undefined) row.github_link = data.githubLink
+  if (data.hobbies !== undefined) row.hobbies = data.hobbies
+  return row
+}
+
+export async function updateProfile(
+  id: string,
+  data: Partial<ProfileFields>,
+): Promise<ProfileRecord | null> {
+  const [updated] = await db('profiles')
+    .where({ id })
+    .update(profileToRow(data))
+    .returning(profileColumns)
+
+  if (!updated) return null
+  
+  const socialLinks = await db('social_links')
+    .where('profile_id', id)
+    .select('label', 'url')
+
+  return {
+    ...updated,
+    hobbies: updated.hobbies ?? [],
+    socialLinks,
+  }  
+}
+
+export async function replaceSocialLinks(
+  profileId: string,
+  links: {label: string; url: string }[],
+): Promise<void> {
+  await db.transaction(async (trx) => {
+    await trx('social_links').where('profile_id', profileId).del()
+    if (links.length === 0) return
+    await trx('social_links').insert(
+      links.map((link)=> ({
+        profile_id: profileId,
+        label: link.label,
+        url: link.url
+      }))
+    )
+  })
+}
+  

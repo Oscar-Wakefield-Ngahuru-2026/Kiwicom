@@ -56,7 +56,7 @@ export interface DeveloperProfile {
   bio: string | null
   role: string | null
   location: string | null
-  githubLink: string
+  githubLink: string | null
   hobbies: string[]
   socialLinks: { label: string; url: string }[]
   createdAt: string
@@ -73,6 +73,26 @@ export async function getProfileByUsername(
       profile.githubLink ?? `https://github.com/${profile.githubUsername}`,
   }
 }
+
+export async function updateProfile(
+  id: string,
+  data: Partial<DeveloperProfile>,
+  ): Promise<DeveloperProfile> {
+    const res = await request.patch(`${rootURL}/profiles/${id}`).send(data)
+    const profile = res.body
+    return {
+      ...profile,
+      githubLink:
+        profile.githubLink ?? `https://github.com/${profile.githubUsername}`,
+    }
+  }
+
+  export async function updateSocialLinks(
+    id: string,
+    links: { label: string; url: string}[]
+  ): Promise<void> {
+    await request.put(`${rootURL}/profiles/${id}/social-links`).send(links)
+  }
 
 export async function addProject(data: ProjectData): Promise<Project> {
   const res = await request.post(`${rootURL}/projects`).send(data)
