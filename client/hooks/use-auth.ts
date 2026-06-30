@@ -13,7 +13,8 @@ export function useAuth() {
     // "Void" to explicitly say the return value is not needed
     void supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null)
-      setToken(session?.provider_token ?? null)
+      const stored = sessionStorage.getItem('github_token')
+      setToken(stored)
       setLoading(false)
     })
 
@@ -23,6 +24,12 @@ export function useAuth() {
     } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null)
       setToken(session?.provider_token ?? null)
+      if (session?.provider_token) {
+        sessionStorage.setItem('github_token', session.provider_token)
+      } else {
+        sessionStorage.removeItem('github_token')
+      }
+
       if (event === 'SIGNED_IN' && session?.user) {
         const { id, user_metadata } = session.user
         void upsertProfile({

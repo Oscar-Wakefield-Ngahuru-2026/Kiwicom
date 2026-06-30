@@ -53,6 +53,23 @@ export default function CreateProject() {
     }
   }
 
+  function handleSelect(repo: RepoResult) {
+    setForm((prev) => ({
+      ...prev,
+      fullName: repo.fullName,
+      description: repo.description,
+      htmlUrl: repo.htmlUrl,
+      homepage: repo.homepage,
+      topics: repo.topics,
+      primaryLanguage: repo.primaryLanguage,
+      stars: repo.stars,
+      openIssuesCount: repo.openIssuesCount,
+      isOpenSource: repo.isOpenSource,
+      license: repo.license,
+    }))
+    setShowDropdown(false)
+  }
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     mutation.mutate(form as ProjectData, {
@@ -71,15 +88,35 @@ export default function CreateProject() {
           >
             Project Name
           </label>
-          <input
-            id="fullName"
-            name="fullName"
-            value={form.fullName}
-            onChange={handleChange}
-            required
-            placeholder="owner/repo"
-            className="rounded border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <div className="relative">
+            <input
+              id="fullName"
+              name="fullName"
+              value={form.fullName}
+              onChange={handleChange}
+              required
+              placeholder="owner/repo"
+              className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            {showDropdown && (
+              <div className="absolute z-10 mt-1 w-full rounded border border-slate-200 bg-white shadow-md">
+                {results.map((repo) => (
+                  <button
+                    key={repo.fullName}
+                    onClick={() => handleSelect(repo)}
+                    className="w-full cursor-pointer px-3 py-2 text-left text-sm hover:bg-slate-100"
+                  >
+                    <span className="font-medium">{repo.fullName}</span>
+                    {repo.description && (
+                      <span className="ml-2 truncate text-slate-500">
+                        {repo.description}
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="flex flex-col gap-1">

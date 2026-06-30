@@ -20,6 +20,7 @@ router.get('/repos', async (req, res) => {
     })
 
     const repos = data
+      .filter((r) => !r.private)
       .filter(
         (r) => !search || r.name.toLowerCase().includes(search.toLowerCase()),
       )
