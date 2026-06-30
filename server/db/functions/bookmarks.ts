@@ -35,7 +35,7 @@ export async function getBookmarkedProjects(
   userId: string,
 ): Promise<Project[]> {
   return db('bookmarks')
-    .join('projects', 'bookmarks.project_id', 'projets.id')
+    .join('projects', 'bookmarks.project_id', 'projects.id')
     .where('bookmarks.user_id', userId)
     .select(projectColumns)
     .orderBy('bookmarks.created_at', 'desc')
