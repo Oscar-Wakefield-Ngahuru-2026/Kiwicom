@@ -1,4 +1,5 @@
 import { ProjectData } from '../../models/projects'
+import { PREDEFINED_TOPICS } from '../../models/topics'
 import { useAddProject } from '../hooks/use-add-project'
 import { useState } from 'react'
 
@@ -6,11 +7,13 @@ const initialState: Partial<ProjectData> = {
   fullName: '',
   description: '',
   htmlUrl: '',
+  topics: [],
 }
 
 export default function CreateProject() {
   const [form, setForm] = useState(initialState)
   const mutation = useAddProject()
+  const topicsList = PREDEFINED_TOPICS
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -27,6 +30,22 @@ export default function CreateProject() {
               : value
           : value,
     }))
+  }
+
+  function handleTopic(topic: string) {
+    setForm((prev) => {
+      if (prev.topics?.includes(topic)) {
+        return {
+          ...prev,
+          topics: prev.topics.filter(
+            (selectedTopic) => selectedTopic !== topic,
+          ),
+        }
+      } else {
+        const currentTopics = prev.topics ?? []
+        return { ...prev, topics: [...currentTopics, topic] }
+      }
+    })
   }
 
   function handleSubmit(e: React.FormEvent) {
@@ -94,6 +113,27 @@ export default function CreateProject() {
           />
         </div>
 
+        <div className="flex flex-col gap-1">
+          <p className="mb-1 text-sm font-medium text-slate-700">
+            Choose the topics for your project
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {topicsList.map((topic) => (
+              <button
+                key={topic}
+                type="button"
+                onClick={() => handleTopic(topic)}
+                className={
+                  form.topics?.includes(topic)
+                    ? 'rounded-full bg-green-500 px-3 py-1 text-sm text-white'
+                    : 'rounded-full bg-blue-200 px-3 py-1 text-sm text-slate-700'
+                }
+              >
+                {topic}
+              </button>
+            ))}
+          </div>
+        </div>
         <button
           type="submit"
           disabled={mutation.isPending}
