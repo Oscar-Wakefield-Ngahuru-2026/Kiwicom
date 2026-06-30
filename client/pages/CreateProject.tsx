@@ -1,6 +1,8 @@
 import { ProjectData } from '../../models/projects'
 import { useAddProject } from '../hooks/use-add-project'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
+import { useAuth } from '../hooks/use-auth'
+import { getGithubRepos, RepoResult } from '../apiClient'
 
 const initialState: Partial<ProjectData> = {
   fullName: '',
@@ -11,6 +13,11 @@ const initialState: Partial<ProjectData> = {
 export default function CreateProject() {
   const [form, setForm] = useState(initialState)
   const mutation = useAddProject()
+
+  const { token } = useAuth()
+  const [results, setResults] = useState<RepoResult[]>([])
+  const [showDropdown, setShowDropdown] = useState(false)
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -27,6 +34,23 @@ export default function CreateProject() {
               : value
           : value,
     }))
+
+    if (name === 'fullName' && token) {
+      // Upon each keystroke:
+      //__ Cancel previous timer
+      //__ Start a new 300ms timer and store its ID
+      if (debounceRef.current) clearTimeout(debounceRef.current)
+      debounceRef.current = setTimeout(async () => {
+        if (value.length > 1) {
+          const repos = await getGithubRepos(token, value)
+          setResults(repos)
+          setShowDropdown(repos.length > 0)
+        } else {
+          setResults([])
+          setShowDropdown(false)
+        }
+      }, 300)
+    }
   }
 
   function handleSubmit(e: React.FormEvent) {
