@@ -18,7 +18,6 @@ export default function Home() {
 
   const debouncedSearch = useDebounce(search, 450)
 
-
   if (isPending) {
     return (
       <p role="status" aria-live="polite">
@@ -67,6 +66,7 @@ export default function Home() {
                 description={project.description}
                 ownerName={project.ownerName}
                 githubUrl={project.githubUrl}
+                topics={project.topics ?? []}
               />
             </li>
           ))
