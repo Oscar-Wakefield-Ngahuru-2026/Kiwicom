@@ -2,15 +2,16 @@
 // Lets them edit bio, role, location, github link, hobbies, and social links,
 // and saves the changes back via the profile API endpoints.
 
-
 import { useState, useEffect } from 'react'
-import { Navigate } from 'react-router'
+import { Navigate, Link } from 'react-router'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuth } from '../hooks/use-auth'
+
 import {
   getProfileByUsername,
   updateProfile,
   updateSocialLinks,
+  getBookmarkedProjects,
 } from '../apiClient'
 
 export default function MyProfile() {
@@ -29,6 +30,12 @@ export default function MyProfile() {
     queryKey: ['profile', username],
     queryFn: () => getProfileByUsername(username!),
     enabled: !!username,
+  })
+
+  const { data: bookmarkedProjects } = useQuery({
+    queryKey: ['bookmarks', user?.id],
+    queryFn: () => getBookmarkedProjects(user!.id),
+    enabled: !!user,
   })
 
   // Form state — populated from the loaded profile via the effect below
@@ -311,6 +318,39 @@ export default function MyProfile() {
             >
               Add social link
             </button>
+          </section>
+          
+          <section aria-labelledby="bookmarked-heading">
+            <h2 id="bookmarked-heading" className="text-xl font-bold">
+              Bookmarked projects
+            </h2>
+            {!bookmarkedProjects || bookmarkedProjects.length === 0 ? (
+              <p className="mt-4 text-sm text-slate-600">
+                No bookmarks yet — click the bookmark icon on any project to
+                save it.
+              </p>
+            ) : (
+              <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+                {bookmarkedProjects.map((project) => (
+                  <li
+                    key={project.id}
+                    className="rounded border border-slate-200 p-3"
+                  >
+                    <Link
+                      to={`/projects/${project.id}`}
+                      className="text-sm font-semibold text-blue-700 hover:underline focus-visible:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500"
+                    >
+                      {project.fullName}
+                    </Link>
+                    {project.description && (
+                      <p className="mt-1 text-xs text-slate-600">
+                        {project.description}
+                      </p>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
           </section>
 
           <section aria-labelledby="projects-heading">
