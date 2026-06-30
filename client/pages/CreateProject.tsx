@@ -207,6 +207,13 @@ export default function CreateProject() {
             Something went wrong. Try again.
           </p>
         )}
+        {mutation.isSuccess && (
+          <div className="rounded-md border border-blue-200 bg-blue-50 px-4 py-3 text-center">
+            <p className="text-base font-medium text-blue-600">
+              Project added successfully! 🥝
+            </p>
+          </div>
+        )}
       </form>
     </div>
   )

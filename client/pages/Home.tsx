@@ -299,14 +299,14 @@ export default function Home() {
         onChange={(e) => setSearch(e.target.value)}
         className="mb-6 w-96 rounded border border-slate-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
-      <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="grid grid-cols-1 items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {filteredProjects.length === 0 && search ? (
           <p className="text-slate-400">
             No projects found for &quot;{search}&quot;
           </p>
         ) : (
           filteredProjects.map((project) => (
-            <li key={project.id}>
+            <li key={project.id} className="h-full">
               <ProjectCard
                 id={project.id}
                 name={project.name}
