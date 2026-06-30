@@ -37,12 +37,35 @@ router.get('/:id', async (req, res) => {
 // POST
 router.post('/', async (req, res) => {
   try {
-    const { fullName, description, htmlUrl } = req.body
+    const {
+      fullName,
+      description,
+      htmlUrl,
+      homepage,
+      primaryLanguage,
+      topics,
+      stars,
+      openIssuesCount,
+      isOpenSource,
+      license,
+    } = req.body
+
     if (!fullName || !htmlUrl) {
       res.status(400).json({ error: 'fullName and htmlUrl are required' })
       return
     }
-    const newProject = await addProject({ fullName, description, htmlUrl })
+    const newProject = await addProject({
+      fullName,
+      description,
+      htmlUrl,
+      homepage,
+      primaryLanguage,
+      topics,
+      stars,
+      openIssuesCount,
+      isOpenSource,
+      license,
+    })
     res.status(201).json(newProject)
   } catch (error) {
     if (error instanceof Error) {
