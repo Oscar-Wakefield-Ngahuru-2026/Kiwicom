@@ -1,12 +1,18 @@
-import { useQuery } from '@tanstack/react-query'
-import { useParams } from 'react-router'
-import { getProjectById } from '../apiClient'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useParams, Link } from 'react-router'
+import {
+  getProjectById,
+  getBookmarkedProjects,
+  addBookmark,
+  removeBookmark,
+} from '../apiClient'
 import { useAuth } from '../hooks/use-auth'
 
 function ProjectPage() {
   const { id } = useParams()
   const projectId = Number(id)
-  const { isLoggedIn, signIn } = useAuth()
+  const { user, isLoggedIn, signIn } = useAuth()
+  const queryClient = useQueryClient()
 
   const {
     data: project,
@@ -15,6 +21,28 @@ function ProjectPage() {
   } = useQuery({
     queryKey: ['project', projectId],
     queryFn: () => getProjectById(projectId),
+  })
+
+  const { data: bookmarks } = useQuery({
+    queryKey: ['bookmarks', user?.id],
+    queryFn: () => getBookmarkedProjects(user!.id),
+    enabled: isLoggedIn,
+  })
+
+  const isBookmarked = bookmarks?.some((p) => p.id === projectId) ?? false
+
+  const bookmarkMutation = useMutation({
+    mutationFn: async () => {
+      if (!user) return
+      if (isBookmarked) {
+        await removeBookmark(user.id, projectId)
+      } else {
+        await addBookmark(user.id, projectId)
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['bookmarks', user?.id] })
+    },
   })
 
   if (isPending) {
@@ -28,7 +56,29 @@ function ProjectPage() {
   return (
     <div className="min-h-screen bg-slate-300 p-8">
       <div className="mx-auto max-w-3xl">
-        <h1 className="mb-6 text-2xl font-bold">{project.fullName}</h1>
+        <h1 className="mb-6 text-2xl font-bold">
+          <Link
+            to={`/developers/${project.fullName.split('/')[0]}`}
+            className="text-blue-700 hover:underline focus-visible:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
+          >
+            {project.fullName.split('/')[0]}
+          </Link>
+          /{project.fullName.split('/')[1]}
+        </h1>
+        {isLoggedIn && (
+          <button
+            type="button"
+            onClick={() => bookmarkMutation.mutate()}
+            disabled={bookmarkMutation.isPending}
+            aria-pressed={isBookmarked}
+            aria-label={
+              isBookmarked ? 'Remove bookmark' : 'Bookmark this project'
+            }
+            className="mb-4 rounded text-sm font-medium text-slate-700 hover:text-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
+          >
+            {isBookmarked ? '★ Bookmarked' : '☆ Bookmark'}
+          </button>
+        )}
 
         <div className="mb-6 flex h-64 w-full items-center justify-center rounded-lg bg-gray-200">
           <span className="text-gray-400">No image available</span>

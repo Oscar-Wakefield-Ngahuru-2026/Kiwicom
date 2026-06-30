@@ -32,4 +32,5 @@ export interface ProjectSummary {
   openIssuesCount: number
   isOpenSource: boolean
   createdAt: string
+  topics: string[] | null
 }

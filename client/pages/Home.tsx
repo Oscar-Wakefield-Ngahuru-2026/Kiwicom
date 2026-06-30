@@ -25,7 +25,6 @@ export default function Home() {
     return list.includes(item) ? list.filter((i) => i !== item) : [...list, item]
   }
 
-
   if (isPending) {
     return (
       <p role="status" aria-live="polite">
@@ -86,6 +85,7 @@ export default function Home() {
                 description={project.description}
                 ownerName={project.ownerName}
                 githubUrl={project.githubUrl}
+                topics={project.topics ?? []}
               />
             </li>
           ))

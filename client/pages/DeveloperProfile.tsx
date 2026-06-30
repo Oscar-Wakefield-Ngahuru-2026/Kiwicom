@@ -77,7 +77,7 @@ export default function DeveloperProfile() {
           )}
 
           <a
-            href={profile.githubLink}
+            href={profile.githubLink ?? undefined}
             target="_blank"
             rel="noopener noreferrer"
             className="text-sm text-blue-600 underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500"
