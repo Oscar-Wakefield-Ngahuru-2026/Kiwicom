@@ -22,6 +22,7 @@ interface ProjectRow {
   description: string | null
   htmlUrl: string
   createdAt: string
+  topics: string[]
 }
 
 export async function getProjects(): Promise<ProjectSummary[]> {
@@ -35,6 +36,7 @@ export async function getProjects(): Promise<ProjectSummary[]> {
       githubUrl: row.htmlUrl,
       ownerName,
       createdAt: row.createdAt,
+      topics: row.topics,
     }
   })
 }
