@@ -36,12 +36,16 @@
   "dependencies": {
     "@octokit/rest": "^22.0.1",
     "@supabase/supabase-js": "^2.108.2",
+    "clsx": "^2.1.1",
     "cors": "^2.8.5",
     "dotenv": "^17.4.2",
     "express": "^4.22.1",
+    "framer-motion": "^12.42.2",
     "knex": "^3.2.10",
+    "lucide-react": "^1.22.0",
     "pg": "^8.22.0",
-    "superagent": "^10.2.2"
+    "superagent": "^10.2.2",
+    "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {
     "@devacademy/eslint-config": "^1.10.2",

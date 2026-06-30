@@ -12,6 +12,7 @@ import {
   updateProfile,
   updateSocialLinks,
   getBookmarkedProjects,
+  getProjects,
 } from '../apiClient'
 
 export default function MyProfile() {
@@ -37,6 +38,18 @@ export default function MyProfile() {
     queryFn: () => getBookmarkedProjects(user!.id),
     enabled: !!user,
   })
+
+  const { data: allProjects } = useQuery({
+    queryKey: ['projects'],
+    queryFn: getProjects,
+  })
+
+  // Username-match convention: a project is "yours" if the owner-half of its
+  // fullName matches your GitHub username. Long-term fix is an owner_profile_id
+  // FK on the projects table.
+  const submittedProjects = allProjects?.filter(
+    (p) => p.ownerName === username,
+  )
 
   // Form state — populated from the loaded profile via the effect below
   const [form, setForm] = useState({
@@ -366,12 +379,32 @@ export default function MyProfile() {
             <h2 id="projects-heading" className="text-xl font-bold">
               Submitted projects
             </h2>
-            {/* TODO(schema): swap stub for a real grid filtered by
-                owner_profile_id once that column exists on projects table */}
-            <p className="mt-4 text-sm text-slate-600">
-              Project grid will populate when the projects-to-profile link is
-              added to the schema.
-            </p>
+            {!submittedProjects || submittedProjects.length === 0 ? (
+              <p className="mt-4 text-sm text-slate-600">
+                You haven&apos;t added any projects yet.
+              </p>
+            ) : (
+              <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+                {submittedProjects.map((project) => (
+                  <li
+                    key={project.id}
+                    className="rounded border border-slate-200 p-3"
+                  >
+                    <Link
+                      to={`/projects/${project.id}`}
+                      className="text-sm font-semibold text-blue-700 hover:underline focus-visible:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500"
+                    >
+                      {project.name}
+                    </Link>
+                    {project.description && (
+                      <p className="mt-1 text-xs text-slate-600">
+                        {project.description}
+                      </p>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
           </section>
 
           <div className="flex items-center gap-4">

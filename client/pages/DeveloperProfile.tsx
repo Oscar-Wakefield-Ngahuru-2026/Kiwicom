@@ -4,7 +4,8 @@
 
 import { useParams } from 'react-router'
 import { useQuery } from '@tanstack/react-query'
-import { getProfileByUsername } from '../apiClient'
+import { Link } from 'react-router'
+import { getProfileByUsername, getProjects } from '../apiClient'
 
 export default function DeveloperProfile() {
   const { username } = useParams<{ username: string }>()
@@ -18,6 +19,17 @@ export default function DeveloperProfile() {
     queryFn: () => getProfileByUsername(username ?? ''),
     enabled: !!username,
   })
+
+  const { data: allProjects } = useQuery({
+    queryKey: ['projects'],
+    queryFn: getProjects,
+  })
+
+  // Username-match convention: a project belongs to this developer if the
+  // owner-half of its fullName matches the URL username.
+  const submittedProjects = allProjects?.filter(
+    (p) => p.ownerName === username,
+  )
 
   if (isPending) {
     return (
@@ -138,12 +150,32 @@ export default function DeveloperProfile() {
             <h2 id="projects-heading" className="text-xl font-bold">
               Submitted projects
             </h2>
-            {/* TODO(schema): we need to replace stub with a real grid filtered by
-                owner_profile_id once that column exists on projects table */}
-            <p className="mt-4 text-sm text-slate-600">
-              Project grid will populate when the projects-to-profile link is
-              added to the schema.
-            </p>
+            {!submittedProjects || submittedProjects.length === 0 ? (
+              <p className="mt-4 text-sm text-slate-600">
+                {profile.githubUsername} hasn&apos;t added any projects yet.
+              </p>
+            ) : (
+              <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+                {submittedProjects.map((project) => (
+                  <li
+                    key={project.id}
+                    className="rounded border border-slate-200 p-3"
+                  >
+                    <Link
+                      to={`/projects/${project.id}`}
+                      className="text-sm font-semibold text-blue-700 hover:underline focus-visible:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500"
+                    >
+                      {project.name}
+                    </Link>
+                    {project.description && (
+                      <p className="mt-1 text-xs text-slate-600">
+                        {project.description}
+                      </p>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
           </section>
 
           <section aria-labelledby="message-heading">
