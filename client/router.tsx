@@ -18,13 +18,12 @@ export const routes = createRoutesFromElements(
   <Route path="/" element={<Layout />}>
     <Route index element={<Home />} />
     <Route path="projects/:id" element={<ProjectPage />} />
-    <Route path="projects/new" element={<CreateProject />} />
-    <Route path="me" element={<MyProfile />} />
     <Route path="developers/:username" element={<DeveloperProfile />} />
     <Route path="login" element={<Login />} />
 
     <Route element={<ProtectedRoute />}>
       <Route path="projects/new" element={<CreateProject />} />
+      <Route path="me" element={<MyProfile />} />
     </Route>
   </Route>,
 )
