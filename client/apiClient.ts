@@ -56,7 +56,7 @@ export interface DeveloperProfile {
   bio: string | null
   role: string | null
   location: string | null
-  githubLink: string
+  githubLink: string | null
   hobbies: string[]
   socialLinks: { label: string; url: string }[]
   createdAt: string
