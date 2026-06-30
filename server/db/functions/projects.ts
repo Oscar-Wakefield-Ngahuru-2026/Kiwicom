@@ -77,7 +77,13 @@ export async function addProject(data: Partial<ProjectData>): Promise<Project> {
       full_name: data.fullName,
       description: data.description,
       html_url: data.htmlUrl,
+      homepage: data.homepage,
+      primary_language: data.primaryLanguage,
       topics: data.topics,
+      stars: data.stars,
+      open_issues_count: data.openIssuesCount,
+      is_open_source: data.isOpenSource,
+      license: data.license,
     })
     .returning(projectColumns)
   return project
