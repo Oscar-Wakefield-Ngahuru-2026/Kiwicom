@@ -1,10 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { useParams, Link } from 'react-router'
+import { useParams, Link, useNavigate } from 'react-router'
 import {
   getProjectById,
   getBookmarkedProjects,
   addBookmark,
   removeBookmark,
+  deleteProject,
 } from '../apiClient'
 import { useAuth } from '../hooks/use-auth'
 
@@ -13,6 +14,7 @@ function ProjectPage() {
   const projectId = Number(id)
   const { user, isLoggedIn, signIn } = useAuth()
   const queryClient = useQueryClient()
+  const navigate = useNavigate()
 
   const {
     data: project,
@@ -45,6 +47,22 @@ function ProjectPage() {
     },
   })
 
+  const deleteProjectMutation = useMutation({
+    mutationFn: async () => {
+      await deleteProject(projectId)
+    },
+    onSuccess: () => {
+      navigate('/')
+    },
+  })
+
+  const handleDelete = () => {
+    const confirmed = confirm('¿Are you sure you want to delete this project?')
+    if (confirmed) {
+      deleteProjectMutation.mutate()
+    }
+  }
+
   if (isPending) {
     return <p>loading project...</p>
   }
@@ -52,6 +70,9 @@ function ProjectPage() {
   if (isError) {
     return <p>error: this id does not match anything</p>
   }
+
+  const owner = project.fullName.split('/')[0]
+  const isOwner = user?.user_metadata.user_name === owner
 
   return (
     <div className="min-h-screen bg-slate-300 p-8">
@@ -79,7 +100,6 @@ function ProjectPage() {
             {isBookmarked ? '★ Bookmarked' : '☆ Bookmark'}
           </button>
         )}
-
         <div className="mb-6 flex h-64 w-full items-center justify-center rounded-lg bg-gray-200">
           <span className="text-gray-400">No image available</span>
         </div>
@@ -162,7 +182,6 @@ function ProjectPage() {
             </p>
           )}
         </div>
-
         <a
           href={isLoggedIn ? project.htmlUrl : undefined}
           onClick={!isLoggedIn ? signIn : undefined}
@@ -172,6 +191,18 @@ function ProjectPage() {
         >
           {isLoggedIn ? 'Take me to GitHub repo' : 'Sign in to view repo'}
         </a>
+
+        {isOwner && (
+          <div className="mt-4">
+            <button
+              type="button"
+              onClick={handleDelete}
+              className="rounded-full border-2 border-black bg-gray-200 px-6 py-3 text-sm font-bold text-black transition-colors hover:border-red-600 hover:bg-red-600 hover:text-white"
+            >
+              Delete
+            </button>
+          </div>
+        )}
       </div>
     </div>
   )
