@@ -86,7 +86,9 @@ export default function Home() {
   const [learningMode, setLearningMode] = useState(false)
 
   function toggleItem(list: string[], item: string): string[] {
-    return list.includes(item) ? list.filter((i) => i !== item) : [...list, item]
+    return list.includes(item)
+      ? list.filter((i) => i !== item)
+      : [...list, item]
   }
 
   if (isPending) {
@@ -105,15 +107,28 @@ export default function Home() {
     )
   }
 
-  const languages = [...new Set(projects.map((p) => p.primaryLanguage).filter(Boolean))] as string[]
-  const topics = [...new Set(projects.flatMap((p) => p.topics ?? []).filter(Boolean))]
+  const languages = [
+    ...new Set(projects.map((p) => p.primaryLanguage).filter(Boolean)),
+  ] as string[]
+  const topics = [
+    ...new Set(projects.flatMap((p) => p.topics ?? []).filter(Boolean)),
+  ]
 
   const filteredProjects = projects
-    .filter((p) => p.name?.toLowerCase().includes(debouncedSearch.toLowerCase()))
-    .filter((p) => selectedLanguages.length === 0 || (p.primaryLanguage && selectedLanguages.includes(p.primaryLanguage)))
-    .filter((p) => selectedTopics.length === 0 || selectedTopics.every((t) => p.topics?.includes(t)))
+    .filter((p) =>
+      p.name?.toLowerCase().includes(debouncedSearch.toLowerCase()),
+    )
+    .filter(
+      (p) =>
+        selectedLanguages.length === 0 ||
+        (p.primaryLanguage && selectedLanguages.includes(p.primaryLanguage)),
+    )
+    .filter(
+      (p) =>
+        selectedTopics.length === 0 ||
+        selectedTopics.every((t) => p.topics?.includes(t)),
+    )
     .filter((p) => !learningMode || p.isOpenSource)
-
 
   return (
     <>
@@ -159,8 +174,12 @@ export default function Home() {
         selectedLanguages={selectedLanguages}
         selectedTopics={selectedTopics}
         learningMode={learningMode}
-        onLanguageChange={(lang) => setSelectedLanguages(toggleItem(selectedLanguages, lang))}
-        onTopicChange={(topic) => setSelectedTopics(toggleItem(selectedTopics, topic))}
+        onLanguageChange={(lang) =>
+          setSelectedLanguages(toggleItem(selectedLanguages, lang))
+        }
+        onTopicChange={(topic) =>
+          setSelectedTopics(toggleItem(selectedTopics, topic))
+        }
         onLearningChange={setLearningMode}
       />
       <ul className="grid grid-cols-1 items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -171,7 +190,7 @@ export default function Home() {
         ) : (
           filteredProjects.map((project) => (
             <li key={project.id} className="h-full">
-              <ProjectCard {...project} topics={project.topics ?? []} />
+              <ProjectCard {...project} />
             </li>
           ))
         )}

@@ -17,7 +17,6 @@ export async function getGreeting() {
   return res.body.greeting as string
 }
 
-
 export async function getProjects(): Promise<ProjectSummary[]> {
   const res = await request.get(`${rootURL}/projects`)
   return (res.body as Project[]).map((row) => {
