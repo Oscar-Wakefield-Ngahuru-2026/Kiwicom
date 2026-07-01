@@ -117,7 +117,22 @@ export async function updateProject(
   id: number,
   data: Partial<ProjectData>,
 ): Promise<Project | null> {
-  throw new Error('Not implemented — deferred to post-MVP edit feature.')
+  const [project] = await db('projects')
+    .where({ id })
+    .update({
+      full_name: data.fullName,
+      description: data.description,
+      html_url: data.htmlUrl,
+      homepage: data.homepage,
+      primary_language: data.primaryLanguage,
+      topics: data.topics,
+      stars: data.stars,
+      open_issues_count: data.openIssuesCount,
+      is_open_source: data.isOpenSource,
+      license: data.license,
+    })
+    .returning(projectColumns)
+  return project ?? null
 }
 
 /**
@@ -133,6 +148,6 @@ export async function updateProject(
  *     cascade behavior in those migrations (ON DELETE CASCADE vs RESTRICT).
  *   - For now this is a soft skeleton — the FK constraints don't exist yet.
  */
-export async function deleteProject(id: number): Promise<number> {
-  throw new Error('Not implemented — deferred to post-MVP delete feature.')
+export async function deleteProject(id: number): Promise<void> {
+  await db('projects').where({ id }).del()
 }
