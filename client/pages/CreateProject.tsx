@@ -5,6 +5,34 @@ import { useState, useRef } from 'react'
 import { useAuth } from '../hooks/use-auth'
 import { getGithubRepos, RepoResult } from '../apiClient'
 
+const MIDNIGHT = '#0E1426'
+const DEEP_SKY = '#1E2A4C'
+const TILE_BORDER = '#2E3B5F'
+const INPUT_BG = '#131C32'
+const MOONLIGHT = '#F3EAD7'
+const MIST = '#B3BCD0'
+const MAGNOLIA = '#E8B4C4'
+const LANTERN = '#E6B870'
+const LOTUS = '#6FB3B8'
+const FONT_BODY = 'Lexend, system-ui, sans-serif'
+const FONT_MONO = 'JetBrains Mono, ui-monospace, monospace'
+
+const cardStyle = {
+  backgroundColor: DEEP_SKY,
+  border: `1px solid ${TILE_BORDER}`,
+  borderLeft: `3px solid ${MAGNOLIA}`,
+}
+const inputStyle = {
+  backgroundColor: INPUT_BG,
+  border: `1px solid ${TILE_BORDER}`,
+  color: MOONLIGHT,
+  outlineColor: LANTERN,
+}
+const inputClass =
+  'rounded-md px-3 py-2 text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2'
+const labelClass = 'text-xs uppercase tracking-[0.15em]'
+const labelStyle = { fontFamily: FONT_MONO, color: LOTUS }
+
 const initialState: Partial<ProjectData> = {
   fullName: '',
   description: '',
@@ -123,131 +151,190 @@ export default function CreateProject() {
   }
 
   return (
-    <div className="mx-auto max-w-lg px-4 py-10">
-      <h1 className="mb-6 text-2xl font-bold">Add a Project</h1>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-        <div className="flex flex-col gap-1">
-          <label
-            htmlFor="fullName"
-            className="text-sm font-medium text-slate-700"
-          >
-            Project Name
-          </label>
-          <div className="relative">
+    <main
+      className="min-h-screen pt-24 pb-16"
+      style={{ backgroundColor: MIDNIGHT, fontFamily: FONT_BODY }}
+    >
+      <div className="mx-auto max-w-2xl px-6">
+        <p
+          className="mb-2 text-xs uppercase tracking-[0.25em]"
+          style={{ fontFamily: FONT_MONO, color: LOTUS }}
+        >
+          Contribute · New entry
+        </p>
+        <h1 className="mb-8 text-3xl font-medium" style={{ color: MOONLIGHT }}>
+          Add a project
+          <span style={{ color: MAGNOLIA }}>.</span>
+        </h1>
+
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-6 rounded-md p-6 md:p-8"
+          style={cardStyle}
+        >
+          <div className="flex flex-col gap-2">
+            <label htmlFor="fullName" className={labelClass} style={labelStyle}>
+              Project name
+            </label>
+            <div className="relative">
+              <input
+                id="fullName"
+                name="fullName"
+                value={form.fullName}
+                onChange={handleChange}
+                required
+                autoComplete="off"
+                placeholder="owner/repo"
+                className={`w-full ${inputClass}`}
+                style={inputStyle}
+              />
+              {errors.fullName && (
+                <p className="mt-1 text-xs" style={{ color: MAGNOLIA }}>
+                  {errors.fullName}
+                </p>
+              )}
+              {showDropdown && (
+                <div
+                  className="absolute z-10 mt-1 w-full overflow-hidden rounded-md"
+                  style={{
+                    backgroundColor: INPUT_BG,
+                    border: `1px solid ${TILE_BORDER}`,
+                    boxShadow: '0 20px 40px -20px rgba(0,0,0,0.6)',
+                  }}
+                >
+                  {results.map((repo) => (
+                    <button
+                      key={repo.fullName}
+                      type="button"
+                      onClick={() => handleSelect(repo)}
+                      className="w-full cursor-pointer px-3 py-2 text-left text-sm hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px]"
+                      style={{ color: MOONLIGHT, outlineColor: LANTERN }}
+                    >
+                      <span className="font-medium">{repo.fullName}</span>
+                      {repo.description && (
+                        <span
+                          className="ml-2 truncate text-xs"
+                          style={{ color: MIST }}
+                        >
+                          {repo.description}
+                        </span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label
+              htmlFor="description"
+              className={labelClass}
+              style={labelStyle}
+            >
+              Project description
+            </label>
+            <textarea
+              name="description"
+              id="description"
+              value={form.description ?? ''}
+              onChange={handleChange}
+              rows={4}
+              placeholder="What does this project do?"
+              className={inputClass}
+              style={inputStyle}
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label htmlFor="htmlUrl" className={labelClass} style={labelStyle}>
+              GitHub link
+            </label>
             <input
-              id="fullName"
-              name="fullName"
-              value={form.fullName}
+              id="htmlUrl"
+              name="htmlUrl"
+              value={form.htmlUrl}
               onChange={handleChange}
               required
-              autoComplete="off"
-              placeholder="owner/repo"
-              className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="https://github.com/owner/repo"
+              className={inputClass}
+              style={inputStyle}
             />
-            {errors.fullName && (
-              <p className="text-sm text-red-600">{errors.fullName}</p>
-            )}
-            {showDropdown && (
-              <div className="absolute z-10 mt-1 w-full rounded border border-slate-200 bg-white shadow-md">
-                {results.map((repo) => (
-                  <button
-                    key={repo.fullName}
-                    onClick={() => handleSelect(repo)}
-                    className="w-full cursor-pointer px-3 py-2 text-left text-sm hover:bg-slate-100"
-                  >
-                    <span className="font-medium">{repo.fullName}</span>
-                    {repo.description && (
-                      <span className="ml-2 truncate text-slate-500">
-                        {repo.description}
-                      </span>
-                    )}
-                  </button>
-                ))}
-              </div>
+            {errors.htmlUrl && (
+              <p className="mt-1 text-xs" style={{ color: MAGNOLIA }}>
+                {errors.htmlUrl}
+              </p>
             )}
           </div>
-        </div>
 
-        <div className="flex flex-col gap-1">
-          <label
-            htmlFor="description"
-            className="text-sm font-medium text-slate-700"
-          >
-            Project Description
-          </label>
-          <textarea
-            name="description"
-            id="description"
-            value={form.description ?? ''}
-            onChange={handleChange}
-            rows={4}
-            placeholder="What does this project do?"
-            className="rounded border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <label
-            htmlFor="htmlUrl"
-            className="text-sm font-medium text-slate-700"
-          >
-            GitHub Link
-          </label>
-          <input
-            id="htmlUrl"
-            name="htmlUrl"
-            value={form.htmlUrl}
-            onChange={handleChange}
-            required
-            placeholder="https://github.com/owner/repo"
-            className="rounded border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          {errors.htmlUrl && (
-            <p className="text-sm text-red-600">{errors.htmlUrl}</p>
-          )}
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <p className="mb-1 text-sm font-medium text-slate-700">
-            Choose the topics for your project
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {topicsList.map((topic) => (
-              <button
-                key={topic}
-                type="button"
-                onClick={() => handleTopic(topic)}
-                className={
-                  form.topics?.includes(topic)
-                    ? 'rounded-full bg-green-500 px-3 py-1 text-sm text-white'
-                    : 'rounded-full bg-blue-200 px-3 py-1 text-sm text-slate-700'
-                }
-              >
-                {topic}
-              </button>
-            ))}
-          </div>
-        </div>
-        <button
-          type="submit"
-          disabled={mutation.isPending}
-          className="rounded bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
-        >
-          {mutation.isPending ? 'Adding...' : 'Add'}
-        </button>
-        {mutation.isError && (
-          <p className="text-sm text-red-600">
-            Something went wrong. Try again.
-          </p>
-        )}
-        {mutation.isSuccess && (
-          <div className="rounded-md border border-blue-200 bg-blue-50 px-4 py-3 text-center">
-            <p className="text-base font-medium text-blue-600">
-              Project added successfully! 🥝
+          <div className="flex flex-col gap-2">
+            <p className={labelClass} style={labelStyle}>
+              Topics
             </p>
+            <div className="flex flex-wrap gap-2">
+              {topicsList.map((topic) => {
+                const isOn = form.topics?.includes(topic)
+                return (
+                  <button
+                    key={topic}
+                    type="button"
+                    onClick={() => handleTopic(topic)}
+                    aria-pressed={isOn}
+                    className="rounded-full px-3 py-1 text-xs uppercase tracking-[0.1em] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                    style={{
+                      fontFamily: FONT_MONO,
+                      backgroundColor: isOn ? MAGNOLIA : INPUT_BG,
+                      border: `1px solid ${isOn ? MAGNOLIA : TILE_BORDER}`,
+                      color: isOn ? MIDNIGHT : MIST,
+                      outlineColor: LANTERN,
+                    }}
+                  >
+                    {topic}
+                  </button>
+                )
+              })}
+            </div>
           </div>
-        )}
-      </form>
-    </div>
+
+          <button
+            type="submit"
+            disabled={mutation.isPending}
+            className="self-start rounded-md px-6 py-2.5 text-xs uppercase tracking-[0.2em] hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:opacity-40"
+            style={{
+              fontFamily: FONT_MONO,
+              backgroundColor: INPUT_BG,
+              border: `1px solid ${LANTERN}`,
+              color: LANTERN,
+              outlineColor: LANTERN,
+            }}
+          >
+            {mutation.isPending ? 'Adding…' : 'Add project'}
+          </button>
+          {mutation.isError && (
+            <p className="text-sm" style={{ color: MAGNOLIA }} role="alert">
+              Something went wrong. Try again.
+            </p>
+          )}
+          {mutation.isSuccess && (
+            <div
+              className="rounded-md px-4 py-3 text-center"
+              role="status"
+              style={{
+                backgroundColor: INPUT_BG,
+                border: `1px solid ${TILE_BORDER}`,
+                borderLeft: `3px solid ${LOTUS}`,
+              }}
+            >
+              <p
+                className="text-sm uppercase tracking-[0.15em]"
+                style={{ fontFamily: FONT_MONO, color: LOTUS }}
+              >
+                Project added — welcome to the catalogue.
+              </p>
+            </div>
+          )}
+        </form>
+      </div>
+    </main>
   )
 }
