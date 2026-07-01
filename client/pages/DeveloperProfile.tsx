@@ -2,9 +2,9 @@
 // No login is required. Profile data comes from a stub today; will switch to a real
 // API call when the profiles endpoint and schema columns exist.
 
-import { useParams } from 'react-router'
+import { Link, useParams } from 'react-router'
 import { useQuery } from '@tanstack/react-query'
-import { getProfileByUsername } from '../apiClient'
+import { getProfileByUsername, getSubmittedProjects } from '../apiClient'
 
 export default function DeveloperProfile() {
   const { username } = useParams<{ username: string }>()
@@ -17,6 +17,12 @@ export default function DeveloperProfile() {
     queryKey: ['profile', username],
     queryFn: () => getProfileByUsername(username ?? ''),
     enabled: !!username,
+  })
+
+  const { data: submittedProjects } = useQuery({
+    queryKey: ['submittedProjects', profile?.id],
+    queryFn: () => getSubmittedProjects(profile!.id),
+    enabled: !!profile?.id,
   })
 
   if (isPending) {
@@ -138,12 +144,34 @@ export default function DeveloperProfile() {
             <h2 id="projects-heading" className="text-xl font-bold">
               Submitted projects
             </h2>
-            {/* TODO(schema): we need to replace stub with a real grid filtered by
-                owner_profile_id once that column exists on projects table */}
-            <p className="mt-4 text-sm text-slate-600">
-              Project grid will populate when the projects-to-profile link is
-              added to the schema.
-            </p>
+            {!submittedProjects || submittedProjects.length === 0 ? (
+              <p className="mt-4 text-sm text-slate-600">
+                No submitted projects yet — add one via the Add Project page.
+              </p>
+            ) : (
+              <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+                {submittedProjects.map((project) => (
+                  <li
+                    key={project.id}
+                    className="rounded border border-slate-200 p-3"
+                  >
+                    <p className="text-sm font-semibold">
+                      <Link
+                        to={`/projects/${project.id}`}
+                        className="text-blue-700 hover:underline"
+                      >
+                        {project.fullName.split('/')[1]}
+                      </Link>
+                    </p>
+                    {project.description && (
+                      <p className="mt-1 text-xs text-slate-600">
+                        {project.description}
+                      </p>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
           </section>
 
           <section aria-labelledby="message-heading">

@@ -47,7 +47,7 @@ export default function ProjectCard({
   })
 
   return (
-    <article className="flex flex-col rounded-lg border border-slate-200 bg-white p-4 shadow-sm hover:shadow-md motion-safe:transition">
+    <article className="flex h-full flex-col rounded-lg border border-slate-200 bg-white p-4 shadow-sm hover:shadow-md motion-safe:transition">
       {imgUrl && (
         <img
           src={imgUrl}
@@ -88,7 +88,7 @@ export default function ProjectCard({
           {ownerName}
         </Link>
       </p>
-      <p className="mt-2 text-sm text-slate-700">{description}</p>
+      <p className="mt-2 flex-1 text-sm text-slate-700">{description}</p>
 
       {topics && topics.length > 0 && (
         <ul className="mt-3 flex flex-wrap gap-2">

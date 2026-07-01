@@ -13,6 +13,7 @@ export interface ProjectData {
   aiSummary: string | null
   aiSummaryAt: Date | null
   lastSyncedAt: Date | null
+  ownerProfileId: string | null
 }
 
 export interface Project extends ProjectData {

@@ -105,6 +105,13 @@ export async function getBookmarkedProjects(
   return res.body as Project[]
 }
 
+export async function getSubmittedProjects(
+  profileId: string,
+): Promise<Project[]> {
+  const res = await request.get(`${rootURL}/projects/by-owner/${profileId}`)
+  return res.body
+}
+
 export async function addBookmark(
   userId: string,
   projectId: number,
