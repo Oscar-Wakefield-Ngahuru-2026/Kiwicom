@@ -1,5 +1,6 @@
 import request from 'superagent'
 import type { Project, ProjectData, ProjectSummary } from '../models/projects'
+import { getAvatarForUser } from './teamAvatars'
 
 const rootURL = new URL(`/api/v1`, document.baseURI)
 
@@ -71,6 +72,7 @@ export async function getProfileByUsername(
   const profile = res.body
   return {
     ...profile,
+    avatarUrl: getAvatarForUser(profile.githubUsername),
     githubLink:
       profile.githubLink ?? `https://github.com/${profile.githubUsername}`,
   }

@@ -76,22 +76,22 @@ function KiwicomGradientCard() {
         style={{ background: 'linear-gradient(180deg, #000000 0%, #000000 70%)' }}
       />
 
-      {/* Purple/blue glow */}
+      {/* Blue/cyan side glows */}
       <motion.div
         className="absolute bottom-0 left-0 right-0 h-2/3 z-20"
         style={{
-          background: `radial-gradient(ellipse at bottom right, rgba(172, 92, 255, 0.7) -10%, rgba(79, 70, 229, 0) 70%), radial-gradient(ellipse at bottom left, rgba(56, 189, 248, 0.7) -10%, rgba(79, 70, 229, 0) 70%)`,
+          background: `radial-gradient(ellipse at bottom right, rgba(59, 130, 246, 0.7) -10%, rgba(59, 130, 246, 0) 70%), radial-gradient(ellipse at bottom left, rgba(6, 182, 212, 0.7) -10%, rgba(6, 182, 212, 0) 70%)`,
           filter: 'blur(40px)',
         }}
         animate={{ opacity: isHovered ? 0.9 : 0.8 }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
       />
 
-      {/* Central purple glow */}
+      {/* Central indigo glow */}
       <motion.div
         className="absolute bottom-0 left-0 right-0 h-2/3 z-21"
         style={{
-          background: `radial-gradient(circle at bottom center, rgba(161, 58, 229, 0.7) -20%, rgba(79, 70, 229, 0) 60%)`,
+          background: `radial-gradient(circle at bottom center, rgba(99, 102, 241, 0.7) -20%, rgba(99, 102, 241, 0) 60%)`,
           filter: 'blur(45px)',
         }}
         animate={{ opacity: isHovered ? 0.85 : 0.75, y: '10%' }}
@@ -107,8 +107,8 @@ function KiwicomGradientCard() {
         }}
         animate={{
           boxShadow: isHovered
-            ? '0 0 20px 4px rgba(172, 92, 255, 0.9), 0 0 30px 6px rgba(138, 58, 185, 0.7), 0 0 40px 8px rgba(56, 189, 248, 0.5)'
-            : '0 0 15px 3px rgba(172, 92, 255, 0.8), 0 0 25px 5px rgba(138, 58, 185, 0.6), 0 0 35px 7px rgba(56, 189, 248, 0.4)',
+            ? '0 0 20px 4px rgba(59, 130, 246, 0.9), 0 0 30px 6px rgba(99, 102, 241, 0.7), 0 0 40px 8px rgba(6, 182, 212, 0.5)'
+            : '0 0 15px 3px rgba(59, 130, 246, 0.8), 0 0 25px 5px rgba(99, 102, 241, 0.6), 0 0 35px 7px rgba(6, 182, 212, 0.4)',
           opacity: isHovered ? 1 : 0.9,
         }}
         transition={{ duration: 0.4, ease: 'easeOut' }}
@@ -226,14 +226,14 @@ function PlaygroundHero() {
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
               <a
                 href="#projects"
-                className="px-8 py-4 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors inline-flex items-center justify-center gap-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
+                className="group px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-semibold shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40 hover:from-blue-500 hover:to-indigo-500 hover:-translate-y-0.5 transition-all inline-flex items-center justify-center gap-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
               >
                 Browse projects
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </a>
               <Link
                 to="/projects/new"
-                className="px-8 py-4 bg-slate-200 text-slate-900 rounded-lg font-semibold hover:bg-slate-300 transition-colors text-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
+                className="px-8 py-4 bg-white text-slate-900 rounded-lg font-semibold border-2 border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all text-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
               >
                 Add your project
               </Link>

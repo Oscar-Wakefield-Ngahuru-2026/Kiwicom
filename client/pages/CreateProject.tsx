@@ -140,6 +140,7 @@ export default function CreateProject() {
               value={form.fullName}
               onChange={handleChange}
               required
+              autoComplete="off"
               placeholder="owner/repo"
               className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />

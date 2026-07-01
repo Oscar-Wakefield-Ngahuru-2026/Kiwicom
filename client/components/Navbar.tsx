@@ -1,5 +1,6 @@
 import { Link } from 'react-router'
 import { useAuth } from '../hooks/use-auth'
+import { getAvatarForUser } from '../teamAvatars'
 
 function Navbar() {
   const { user, signIn, signOut } = useAuth()
@@ -20,7 +21,7 @@ function Navbar() {
           >
             <img
               // Standard shape for Supabase + GitHub OAuth
-              src={user.user_metadata.avatar_url}
+              src={getAvatarForUser(user.user_metadata.user_name)}
               alt={user.user_metadata.user_name}
               className="h-8 w-8 rounded-full"
             />
