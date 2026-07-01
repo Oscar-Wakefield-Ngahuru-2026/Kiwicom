@@ -137,7 +137,6 @@ export async function updateProject(
  *     cascade behavior in those migrations (ON DELETE CASCADE vs RESTRICT).
  *   - For now this is a soft skeleton — the FK constraints don't exist yet.
  */
-export async function deleteProject(id: number): Promise<number> {
-  const result = await db('projects').where({ id }).del()
-  return result
+export async function deleteProject(id: number): Promise<void> {
+  await db('projects').where({ id }).del()
 }
