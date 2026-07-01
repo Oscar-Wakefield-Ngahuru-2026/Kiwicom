@@ -1,11 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { useParams, Link } from 'react-router'
+import { useParams, Link, useNavigate } from 'react-router'
 import { Bookmark, ExternalLink } from 'lucide-react'
 import {
   getProjectById,
   getBookmarkedProjects,
   addBookmark,
   removeBookmark,
+  deleteProject,
 } from '../apiClient'
 import { useAuth } from '../hooks/use-auth'
 
@@ -39,6 +40,7 @@ function ProjectPage() {
   const projectId = Number(id)
   const { user, isLoggedIn, signIn } = useAuth()
   const queryClient = useQueryClient()
+  const navigate = useNavigate()
 
   const {
     data: project,
@@ -71,6 +73,22 @@ function ProjectPage() {
     },
   })
 
+  const deleteProjectMutation = useMutation({
+    mutationFn: async () => {
+      await deleteProject(projectId)
+    },
+    onSuccess: () => {
+      navigate('/')
+    },
+  })
+
+  const handleDelete = () => {
+    const confirmed = confirm('Are you sure you want to delete this project?')
+    if (confirmed) {
+      deleteProjectMutation.mutate()
+    }
+  }
+
   if (isPending) {
     return (
       <div className={pageWrap} style={pageWrapStyle}>
@@ -94,6 +112,8 @@ function ProjectPage() {
   }
 
   const owner = project.fullName.split('/')[0]
+  const isOwner = user?.user_metadata.user_name === owner
+
   const repo = project.fullName.split('/')[1]
   const primaryTopic = project.topics?.[0] ?? ''
 
@@ -198,26 +218,38 @@ function ProjectPage() {
           >
             {project.primaryLanguage && (
               <div>
-                <dt className="text-xs uppercase tracking-[0.15em]" style={{ color: MIST }}>
+                <dt
+                  className="text-xs uppercase tracking-[0.15em]"
+                  style={{ color: MIST }}
+                >
                   Language
                 </dt>
                 <dd style={{ color: MOONLIGHT }}>{project.primaryLanguage}</dd>
               </div>
             )}
             <div>
-              <dt className="text-xs uppercase tracking-[0.15em]" style={{ color: MIST }}>
+              <dt
+                className="text-xs uppercase tracking-[0.15em]"
+                style={{ color: MIST }}
+              >
                 Stars
               </dt>
               <dd style={{ color: MOONLIGHT }}>{project.stars}</dd>
             </div>
             <div>
-              <dt className="text-xs uppercase tracking-[0.15em]" style={{ color: MIST }}>
+              <dt
+                className="text-xs uppercase tracking-[0.15em]"
+                style={{ color: MIST }}
+              >
                 Open issues
               </dt>
               <dd style={{ color: MOONLIGHT }}>{project.openIssuesCount}</dd>
             </div>
             <div>
-              <dt className="text-xs uppercase tracking-[0.15em]" style={{ color: MIST }}>
+              <dt
+                className="text-xs uppercase tracking-[0.15em]"
+                style={{ color: MIST }}
+              >
                 Open source
               </dt>
               <dd style={{ color: MOONLIGHT }}>
@@ -226,7 +258,10 @@ function ProjectPage() {
             </div>
             {project.license && (
               <div>
-                <dt className="text-xs uppercase tracking-[0.15em]" style={{ color: MIST }}>
+                <dt
+                  className="text-xs uppercase tracking-[0.15em]"
+                  style={{ color: MIST }}
+                >
                   License
                 </dt>
                 <dd style={{ color: MOONLIGHT }}>{project.license}</dd>
@@ -234,7 +269,10 @@ function ProjectPage() {
             )}
             {project.homepage && (
               <div className="col-span-2 sm:col-span-3">
-                <dt className="text-xs uppercase tracking-[0.15em]" style={{ color: MIST }}>
+                <dt
+                  className="text-xs uppercase tracking-[0.15em]"
+                  style={{ color: MIST }}
+                >
                   Homepage
                 </dt>
                 <dd>
@@ -307,6 +345,25 @@ function ProjectPage() {
           {isLoggedIn ? 'Take me to GitHub repo' : 'Sign in to view repo'}
           <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
         </a>
+
+        {isOwner && (
+          <div className="mt-4">
+            <button
+              type="button"
+              onClick={handleDelete}
+              className="inline-flex items-center rounded-md px-6 py-3 text-xs uppercase tracking-[0.2em] hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              style={{
+                fontFamily: FONT_MONO,
+                backgroundColor: INPUT_BG,
+                border: `1px solid ${MAGNOLIA}`,
+                color: MAGNOLIA,
+                outlineColor: MAGNOLIA,
+              }}
+            >
+              Delete project
+            </button>
+          </div>
+        )}
 
         {project.lastSyncedAt && (
           <p

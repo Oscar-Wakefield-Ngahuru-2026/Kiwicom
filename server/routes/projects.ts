@@ -87,4 +87,35 @@ router.post('/', async (req, res) => {
   }
 })
 
+// Update - PUT: /api/v1/projects/:id
+router.put('/:id', async (req, res) => {
+  try {
+    const id = Number(req.params.id)
+    const project = await db.updateProject(id, req.body)
+    if (!project) {
+      return res.status(404).json({ error: 'Project not found' })
+    }
+    res.json(project)
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: 'Failed to update project' })
+  }
+})
+
+// DELETE: /api/v1/projects/:id
+router.delete('/:id', async (req, res) => {
+  try {
+    const id = Number(req.params.id)
+    await db.deleteProject(id)
+    res.sendStatus(204)
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message)
+    } else {
+      console.error(error)
+    }
+    res.sendStatus(500)
+  }
+})
+
 export default router
