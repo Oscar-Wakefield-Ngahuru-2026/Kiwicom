@@ -14,6 +14,9 @@ const initialState: Partial<ProjectData> = {
 
 export default function CreateProject() {
   const [form, setForm] = useState(initialState)
+  const [errors, setErrors] = useState<{ fullName?: string; htmlUrl?: string }>(
+    {},
+  )
   const mutation = useAddProject()
   const topicsList = PREDEFINED_TOPICS
 
@@ -89,8 +92,31 @@ export default function CreateProject() {
     })
   }
 
+  function validateForm() {
+    const newErrors: { fullName?: string; htmlUrl?: string } = {}
+
+    const parts = form.fullName?.split('/')
+    const hasOwner = parts && parts[0] && parts[0].length > 0
+    const hasRepo = parts && parts[1] && parts[1].length > 0
+    const isValidFormat = parts?.length === 2 && hasOwner && hasRepo
+
+    if (!isValidFormat) {
+      newErrors.fullName = 'Project name must be in the format owner/repo'
+    }
+
+    if (!form.htmlUrl?.startsWith('https://github.com/')) {
+      newErrors.htmlUrl = 'Please provide a valid GitHub repository link'
+    }
+
+    setErrors(newErrors)
+    const hasNoErrors = Object.keys(newErrors).length === 0
+    return hasNoErrors
+  }
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    const isValid = validateForm()
+    if (!isValid) return
     mutation.mutate(
       { ...form, ownerProfileId: user?.id ?? null } as ProjectData,
       { onSuccess: () => setForm(initialState) },
@@ -118,6 +144,9 @@ export default function CreateProject() {
               placeholder="owner/repo"
               className="w-full rounded border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+            {errors.fullName && (
+              <p className="text-sm text-red-600">{errors.fullName}</p>
+            )}
             {showDropdown && (
               <div className="absolute z-10 mt-1 w-full rounded border border-slate-200 bg-white shadow-md">
                 {results.map((repo) => (
@@ -173,6 +202,9 @@ export default function CreateProject() {
             placeholder="https://github.com/owner/repo"
             className="rounded border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+          {errors.htmlUrl && (
+            <p className="text-sm text-red-600">{errors.htmlUrl}</p>
+          )}
         </div>
 
         <div className="flex flex-col gap-1">
