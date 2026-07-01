@@ -2,10 +2,9 @@
 // No login is required. Profile data comes from a stub today; will switch to a real
 // API call when the profiles endpoint and schema columns exist.
 
-import { useParams } from 'react-router'
+import { Link, useParams } from 'react-router'
 import { useQuery } from '@tanstack/react-query'
-import { Link } from 'react-router'
-import { getProfileByUsername, getProjects } from '../apiClient'
+import { getProfileByUsername, getSubmittedProjects } from '../apiClient'
 
 const MIDNIGHT = '#0E1426'
 const DEEP_SKY = '#1E2A4C'
@@ -49,14 +48,11 @@ export default function DeveloperProfile() {
 
   const isNotFound = (error as { status?: number } | undefined)?.status === 404
 
-  const { data: allProjects } = useQuery({
-    queryKey: ['projects'],
-    queryFn: getProjects,
+  const { data: submittedProjects } = useQuery({
+    queryKey: ['submittedProjects', profile?.id],
+    queryFn: () => getSubmittedProjects(profile!.id),
+    enabled: !!profile?.id,
   })
-
-  const submittedProjects = allProjects?.filter(
-    (p) => p.ownerName === username,
-  )
 
   if (isPending) {
     return (
@@ -136,7 +132,7 @@ export default function DeveloperProfile() {
                       className="text-sm font-medium hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                       style={{ color: MOONLIGHT, outlineColor: LANTERN }}
                     >
-                      {project.name}
+                      {project.fullName.split("/")[1]}
                     </Link>
                     {project.description && (
                       <p
@@ -327,7 +323,7 @@ export default function DeveloperProfile() {
                         className="text-sm font-medium hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                         style={{ color: MOONLIGHT, outlineColor: LANTERN }}
                       >
-                        {project.name}
+                        {project.fullName.split("/")[1]}
                       </Link>
                       {project.description && (
                         <p

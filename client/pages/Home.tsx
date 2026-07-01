@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { getProjects } from '../apiClient'
 import ProjectCard from '../components/ProjectCard'
+import FilterBar from '../components/FilterBar'
 import { useState } from 'react'
 import { useDebounce } from '../hooks/use-debounce'
 import { Link } from 'react-router'
@@ -79,8 +80,14 @@ export default function Home() {
   })
 
   const [search, setSearch] = useState('')
-
   const debouncedSearch = useDebounce(search, 450)
+  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([])
+  const [selectedTopics, setSelectedTopics] = useState<string[]>([])
+  const [learningMode, setLearningMode] = useState(false)
+
+  function toggleItem(list: string[], item: string): string[] {
+    return list.includes(item) ? list.filter((i) => i !== item) : [...list, item]
+  }
 
   if (isPending) {
     return (
@@ -98,13 +105,15 @@ export default function Home() {
     )
   }
 
-  const filteredProjects = projects?.filter((project) =>
-    project.name?.toLowerCase().includes(debouncedSearch.toLowerCase()),
-  )
+  const languages = [...new Set(projects.map((p) => p.primaryLanguage).filter(Boolean))] as string[]
+  const topics = [...new Set(projects.flatMap((p) => p.topics ?? []).filter(Boolean))]
 
-  if (projects.length === 0) {
-    return <p>No projects yet - be the first to add one!</p>
-  }
+  const filteredProjects = projects
+    .filter((p) => p.name?.toLowerCase().includes(debouncedSearch.toLowerCase()))
+    .filter((p) => selectedLanguages.length === 0 || (p.primaryLanguage && selectedLanguages.includes(p.primaryLanguage)))
+    .filter((p) => selectedTopics.length === 0 || selectedTopics.every((t) => p.topics?.includes(t)))
+    .filter((p) => !learningMode || p.isOpenSource)
+
 
   return (
     <>
@@ -144,6 +153,16 @@ export default function Home() {
           color: '#F3EAD7',
         }}
       />
+      <FilterBar
+        languages={languages}
+        topics={topics}
+        selectedLanguages={selectedLanguages}
+        selectedTopics={selectedTopics}
+        learningMode={learningMode}
+        onLanguageChange={(lang) => setSelectedLanguages(toggleItem(selectedLanguages, lang))}
+        onTopicChange={(topic) => setSelectedTopics(toggleItem(selectedTopics, topic))}
+        onLearningChange={setLearningMode}
+      />
       <ul className="grid grid-cols-1 items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {filteredProjects.length === 0 && search ? (
           <p className="text-slate-400">
@@ -152,15 +171,7 @@ export default function Home() {
         ) : (
           filteredProjects.map((project) => (
             <li key={project.id} className="h-full">
-              <ProjectCard
-                id={project.id}
-                name={project.name}
-                description={project.description}
-                ownerName={project.ownerName}
-                githubUrl={project.githubUrl}
-                topics={project.topics ?? []}
-                createdAt={project.createdAt}
-              />
+              <ProjectCard {...project} topics={project.topics ?? []} />
             </li>
           ))
         )}

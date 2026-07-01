@@ -19,6 +19,7 @@ const projectColumns = [
   'ai_summary_at as aiSummaryAt',
   'last_synced_at as lastSyncedAt',
   'created_at as createdAt',
+  'owner_profile_id as data.ownerProfileId',
 ]
 
 /**
@@ -84,9 +85,19 @@ export async function addProject(data: Partial<ProjectData>): Promise<Project> {
       open_issues_count: data.openIssuesCount,
       is_open_source: data.isOpenSource,
       license: data.license,
+      owner_profile_id: data.ownerProfileId,
     })
     .returning(projectColumns)
   return project
+}
+
+export async function getProjectsByOwner(
+  profileId: string,
+): Promise<Project[]> {
+  return db('projects')
+    .select(projectColumns)
+    .where('owner_profile_id', profileId)
+    .orderBy('created_at', 'desc')
 }
 
 /**

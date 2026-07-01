@@ -48,7 +48,7 @@ export default function CreateProject() {
   const mutation = useAddProject()
   const topicsList = PREDEFINED_TOPICS
 
-  const { token } = useAuth()
+  const { token, user } = useAuth()
   const [results, setResults] = useState<RepoResult[]>([])
   const [showDropdown, setShowDropdown] = useState(false)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -145,9 +145,10 @@ export default function CreateProject() {
     e.preventDefault()
     const isValid = validateForm()
     if (!isValid) return
-    mutation.mutate(form as ProjectData, {
-      onSuccess: () => setForm(initialState),
-    })
+    mutation.mutate(
+      { ...form, ownerProfileId: user?.id ?? null } as ProjectData,
+      { onSuccess: () => setForm(initialState) },
+    )
   }
 
   return (

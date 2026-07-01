@@ -1,15 +1,11 @@
-import {
-  getProjects,
-  getProjectById,
-  addProject,
-} from '../db/functions/projects'
 import { Router } from 'express'
+import * as db from '../db/functions/projects'
 
 const router = Router()
 
 router.get('/', async (req, res) => {
   try {
-    const projects = await getProjects()
+    const projects = await db.getProjects()
     res.json(projects)
   } catch (err) {
     console.error(err)
@@ -17,11 +13,23 @@ router.get('/', async (req, res) => {
   }
 })
 
+// GET
+router.get('/by-owner/:profileId', async (req, res) => {
+  try {
+    const { profileId } = req.params
+    const projects = await db.getProjectsByOwner(profileId)
+    res.json(projects)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Failed to fetch projects by owner' })
+  }
+})
+
 // GET: /api/v1/projects/:id
 router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params
-    const project = await getProjectById(Number(id))
+    const project = await db.getProjectById(Number(id))
 
     if (!project) {
       return res.status(404).json({ message: 'Project not found' })
@@ -48,13 +56,14 @@ router.post('/', async (req, res) => {
       openIssuesCount,
       isOpenSource,
       license,
+      ownerProfileId,
     } = req.body
 
     if (!fullName || !htmlUrl) {
       res.status(400).json({ error: 'fullName and htmlUrl are required' })
       return
     }
-    const newProject = await addProject({
+    const newProject = await db.addProject({
       fullName,
       description,
       htmlUrl,
@@ -65,6 +74,7 @@ router.post('/', async (req, res) => {
       openIssuesCount,
       isOpenSource,
       license,
+      ownerProfileId,
     })
     res.status(201).json(newProject)
   } catch (error) {

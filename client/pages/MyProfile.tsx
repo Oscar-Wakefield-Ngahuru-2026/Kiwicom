@@ -12,7 +12,7 @@ import {
   updateProfile,
   updateSocialLinks,
   getBookmarkedProjects,
-  getProjects,
+  getSubmittedProjects,
 } from '../apiClient'
 
 const MIDNIGHT = '#0E1426'
@@ -68,14 +68,11 @@ export default function MyProfile() {
     enabled: !!user,
   })
 
-  const { data: allProjects } = useQuery({
-    queryKey: ['projects'],
-    queryFn: getProjects,
+  const { data: submittedProjects } = useQuery({
+    queryKey: ['submittedProjects', user?.id],
+    queryFn: () => getSubmittedProjects(user!.id),
+    enabled: !!user,
   })
-
-  const submittedProjects = allProjects?.filter(
-    (p) => p.ownerName === username,
-  )
 
   const [form, setForm] = useState({
     bio: '',
@@ -517,7 +514,7 @@ export default function MyProfile() {
                         className="text-sm font-medium hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
                         style={{ color: MOONLIGHT, outlineColor: LANTERN }}
                       >
-                        {project.name}
+                        {project.fullName.split('/')[1]}
                       </Link>
                       {project.description && (
                         <p

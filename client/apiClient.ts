@@ -17,27 +17,23 @@ export async function getGreeting() {
   return res.body.greeting as string
 }
 
-interface ProjectRow {
-  id: number
-  fullName: string
-  description: string | null
-  htmlUrl: string
-  createdAt: string
-  topics: string[]
-}
 
 export async function getProjects(): Promise<ProjectSummary[]> {
   const res = await request.get(`${rootURL}/projects`)
-  return (res.body as ProjectRow[]).map((row) => {
+  return (res.body as Project[]).map((row) => {
     const [ownerName, name] = row.fullName.split('/')
     return {
       id: row.id,
       name,
+      ownerName,
       description: row.description ?? '',
       githubUrl: row.htmlUrl,
-      ownerName,
-      createdAt: row.createdAt,
+      primaryLanguage: row.primaryLanguage,
       topics: row.topics,
+      stars: row.stars,
+      openIssuesCount: row.openIssuesCount,
+      isOpenSource: row.isOpenSource,
+      createdAt: String(row.createdAt),
     }
   })
 }
@@ -108,6 +104,13 @@ export async function getBookmarkedProjects(
 ): Promise<Project[]> {
   const res = await request.get(`${rootURL}/bookmarks/${userId}`)
   return res.body as Project[]
+}
+
+export async function getSubmittedProjects(
+  profileId: string,
+): Promise<Project[]> {
+  const res = await request.get(`${rootURL}/projects/by-owner/${profileId}`)
+  return res.body
 }
 
 export async function addBookmark(

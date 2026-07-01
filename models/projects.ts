@@ -13,6 +13,7 @@ export interface ProjectData {
   aiSummary: string | null
   aiSummaryAt: Date | null
   lastSyncedAt: Date | null
+  ownerProfileId: string | null
 }
 
 export interface Project extends ProjectData {
@@ -23,9 +24,13 @@ export interface Project extends ProjectData {
 export interface ProjectSummary {
   id: number
   name: string
+  ownerName: string
   description: string | null
   githubUrl: string
-  ownerName: string
-  createdAt: string
+  primaryLanguage: string | null
   topics: string[] | null
+  stars: number
+  openIssuesCount: number
+  isOpenSource: boolean
+  createdAt: string
 }
