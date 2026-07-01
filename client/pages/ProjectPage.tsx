@@ -83,7 +83,7 @@ function ProjectPage() {
   })
 
   const handleDelete = () => {
-    const confirmed = confirm('¿Are you sure you want to delete this project?')
+    const confirmed = confirm('Are you sure you want to delete this project?')
     if (confirmed) {
       deleteProjectMutation.mutate()
     }
@@ -351,9 +351,16 @@ function ProjectPage() {
             <button
               type="button"
               onClick={handleDelete}
-              className="rounded-full border-2 border-black bg-gray-200 px-6 py-3 text-sm font-bold text-black transition-colors hover:border-red-600 hover:bg-red-600 hover:text-white"
+              className="inline-flex items-center rounded-md px-6 py-3 text-xs uppercase tracking-[0.2em] hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              style={{
+                fontFamily: FONT_MONO,
+                backgroundColor: INPUT_BG,
+                border: `1px solid ${MAGNOLIA}`,
+                color: MAGNOLIA,
+                outlineColor: MAGNOLIA,
+              }}
             >
-              Delete
+              Delete project
             </button>
           </div>
         )}
