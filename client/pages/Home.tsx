@@ -71,7 +71,6 @@ export default function Home() {
         onTopicChange={(topic) => setSelectedTopics(toggleItem(selectedTopics, topic))}
         onLearningChange={setLearningMode}
       />
-      <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       <ul className="grid grid-cols-1 items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {filteredProjects.length === 0 && search ? (
           <p className="text-slate-400">
