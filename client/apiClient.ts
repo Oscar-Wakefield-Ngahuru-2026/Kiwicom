@@ -122,6 +122,18 @@ export async function removeBookmark(
   await request.delete(`${rootURL}/bookmarks/${userId}/${projectId}`)
 }
 
+export async function updateProject(
+  id: number,
+  data: ProjectData,
+): Promise<Project> {
+  const res = await request.put(`${rootURL}/projects/${id}`).send(data)
+  return res.body
+}
+
+export async function deleteProject(id: number) {
+  await request.delete(`${rootURL}/projects/${id}`)
+}
+
 export type { Project }
 
 export interface RepoResult {
