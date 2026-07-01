@@ -1,12 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-
-// --- slider colours: change these ---
-const TRACK = 'bg-slate-800 border border-slate-700'
-const INDICATOR = 'bg-violet-600'
-const ACTIVE_TEXT = 'text-white font-semibold'
-const INACTIVE_TEXT = 'text-slate-400'
-const GLOW = 'shadow-[0_0_12px_rgba(124,58,237,0.55)]'
-// ------------------------------------
+import { LiquidToggle } from '@/components/ui/liquid-radio'
 
 interface DropdownProps {
   label: string
@@ -67,50 +60,6 @@ function Dropdown({ label, options, selected, onChange }: DropdownProps) {
   )
 }
 
-interface SliderProps {
-  value: boolean
-  onChange: (v: boolean) => void
-}
-
-function LearningSlider({ value, onChange }: SliderProps) {
-  const indicatorClass = [
-    'absolute inset-0 w-1/2 rounded-lg transition-transform duration-300 ease-in-out',
-    INDICATOR,
-    value ? 'translate-x-full' : 'translate-x-0',
-  ].join(' ')
-
-  const seriousLabelClass = [
-    'relative z-10 flex flex-1 items-center justify-center text-sm transition-colors duration-300',
-    value ? INACTIVE_TEXT : ACTIVE_TEXT,
-  ].join(' ')
-
-  const learningLabelClass = [
-    'relative z-10 flex flex-1 items-center justify-center text-sm transition-colors duration-300',
-    value ? ACTIVE_TEXT : INACTIVE_TEXT,
-  ].join(' ')
-
-  const containerClass = [
-    'relative flex h-9 w-48 cursor-pointer select-none overflow-hidden rounded-lg transition-shadow duration-300',
-    TRACK,
-    value ? GLOW : '',
-  ].join(' ')
-
-  return (
-    <div
-      className={containerClass}
-      onClick={() => onChange(!value)}
-      role="switch"
-      aria-checked={value}
-      tabIndex={0}
-      onKeyDown={(e) => e.key === 'Enter' && onChange(!value)}
-    >
-      <span className={indicatorClass} />
-      <span className={seriousLabelClass}>Serious</span>
-      <span className={learningLabelClass}>Learning</span>
-    </div>
-  )
-}
-
 interface Props {
   languages: string[]
   topics: string[]
@@ -146,7 +95,7 @@ export default function FilterBar({
         selected={selectedTopics}
         onChange={onTopicChange}
       />
-      <LearningSlider value={learningMode} onChange={onLearningChange} />
+      <LiquidToggle value={learningMode} onChange={onLearningChange} />
     </div>
   )
 }
