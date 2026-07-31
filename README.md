@@ -1,12 +1,8 @@
-# Kiwicom
+<img width="1440" height="715" alt="image" src="https://github.com/user-attachments/assets/32854990-2531-4d7b-8882-6b4c19e774c0" /># Kiwicom
 
 **A community hub for developers to discover, share, and collaborate on open-source projects.**
 
 Built in a one-week sprint by a team of four at Dev Academy Aotearoa, Ngahuru 2026 cohort.
-
-[LIVE_DEMO_LINK_OR_DELETE_THIS_LINE]
-
-![Kiwicom screenshot](SCREENSHOT_PATH_OR_DELETE)
 
 ---
 
